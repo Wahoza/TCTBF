@@ -4,32 +4,51 @@ using SFML.System;
 
 public class DriftFish : Fish
 {
-    Sprite? sprite;
+    private Sprite sprite;
+    private Vector2f movevec;
+    FloatRect CollisionBox;
+    private float scale = 3;
+    private float hitboxscale = 0.9f;
+    Vector2f textureSize;
     public override int ColisionCheck(FloatRect player)
     {
-        if(sprite.GetGlobalBounds().Intersects(player)){
-            return 3;
+        if(CollisionBox.Intersects(player)){
+            return 2;
         }
         return 0;
     }
 
-    public override void Draw(RenderWindow window)
+    public override void Initialize()
     {
-        throw new NotImplementedException();
+        Texture texture =  AssetManager.Instance.Textures["fish"];
+        sprite = new Sprite(texture);
+        Vector2f textureSize = (Vector2f)texture.Size;
+        sprite.Scale *= scale;
+        CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y *scale * hitboxscale);
+    
     }
 
-    public override void Initialize(AssetManager assetman)
+    public override void Draw(RenderWindow window)
     {
-        throw new NotImplementedException();
+        window.Draw(sprite);
     }
 
     public override void MoveToGoal(Vector2f player)
     {
-        throw new NotImplementedException();
+        if(Utils.Distance(player, sprite.Position) > 70){
+            movevec = player - sprite.Position;
+        }else{
+            movevec = sprite.Position - player;
+        }
+        movevec.Normalize(); 
     }
 
     public override void Update(float deltaTime, InputManager inputman)
-    {
-        throw new NotImplementedException();
+    {  
+        sprite.Position += movevec * 2 * deltaTime;
+
+        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
+        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
+        
     }
 }

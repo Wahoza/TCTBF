@@ -19,11 +19,11 @@ public class Water : GameObject
 }
     bool startmovement = false;
     private float DeltaTime;
-    public override void Initialize(AssetManager assetManager)
+    public override void Initialize()
     {
         frameCountPerAnimation[0] = 3;
 
-        Texture waterTexture = assetManager.Textures["water"];
+        Texture waterTexture = AssetManager.Instance.Textures["water"];
         sprite = new Sprite(waterTexture);
         sprite.TextureRect = new IntRect(
             0, 0,

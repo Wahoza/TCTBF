@@ -57,11 +57,11 @@ public class Game
 
             if(gameObject is FishManager FishMan){
                 FishMan.SpawnFish(player.startmovement, window.GetView().Size, window.GetView().Center);
-                int coll = FishMan.ColisionCheck(player.CollisionBox);
-                if(coll > 0){
-                    player.collided = true;
-                }
-                FishMan.MoveToGoal(player.Position);
+                //int coll = FishMan.ColisionCheck(player.CollisionBox);
+                //if(coll > 0){
+                //    player.collided = true;
+                //}
+                FishMan.MoveToGoal(player.GetPosition());
             }
         }
         //waveEffect.Update(deltaTime);
@@ -74,10 +74,10 @@ public class Game
         window.Clear(Color.Blue);
         DrawFloor(new Vector2f(-200, -200), new Vector2i(10, 10), new Vector2i(50, 50));
 
-        foreach (Shaders shader in Shaders)
-        {
-            shader.Draw(window, gameObjects[0].Position);
-        }
+        //foreach (Shaders shader in Shaders)
+        //{
+        //    shader.Draw(window, player.Position);
+        //}
 
         foreach (GameObject gameObject in gameObjects)
         {
@@ -124,22 +124,22 @@ public class Game
         window.SetFramerateLimit(120);
 
         player = new Player();
-        player.Initialize(AssetManager.Instance);
+        player.Initialize();
 
         gameObjects.Add(player);
 
         Turtle turtle = new Turtle();
-        turtle.Initialize(AssetManager.Instance);
+        turtle.Initialize();
 
         gameObjects.Add(turtle);
 
         Water water = new Water();
-        water.Initialize(AssetManager.Instance);
+        water.Initialize();
 
         gameObjects.Add(water);
 
         FishManager FishMan = new FishManager();
-        FishMan.Initialize(AssetManager.Instance);
+        FishMan.Initialize();
 
         gameObjects.Add(FishMan);
         

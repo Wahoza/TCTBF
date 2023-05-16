@@ -465,11 +465,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kilia\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\mmp1.csproj",
+      "projectUniqueName": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\mmp1.csproj",
       "projectName": "mmp1",
-      "projectPath": "C:\\Users\\kilia\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\mmp1.csproj",
+      "projectPath": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\mmp1.csproj",
       "packagesPath": "C:\\Users\\kilia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kilia\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\obj\\",
+      "outputPath": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kilia\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -512,30 +512,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.14, 6.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.14, 6.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.14, 6.0.14]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.14, 6.0.14]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

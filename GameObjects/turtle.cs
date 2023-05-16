@@ -21,11 +21,11 @@ public class Turtle : GameObject
 }
     bool startmovement = false;
     private float DeltaTime;
-    public override void Initialize(AssetManager assetManager)
+    public override void Initialize()
     {
         frameCountPerAnimation[0] = 9;
 
-        Texture turtleTexture = assetManager.Textures["turtle"];
+        Texture turtleTexture = AssetManager.Instance.Textures["turtle"];
         sprite = new Sprite(turtleTexture);
         sprite.TextureRect = new IntRect(
             0, 0,

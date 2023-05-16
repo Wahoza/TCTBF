@@ -2,6 +2,7 @@ using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
+
 public class Player : GameObject
 {
     private const int PLAYER_TILING_X = 3;
@@ -33,17 +34,17 @@ public class Player : GameObject
     bool CameramoveX = true;
     public bool collided = false;
     Vector2f textureSize;
-    float scale = 4;
+    float scale = 3;
     float hitboxscale = 0.9f;
     View view;
 
-    public override void Initialize(AssetManager assetManager)
+    public override void Initialize()
     {
         frameCountPerAnimation[0] = 1;
         frameCountPerAnimation[1] = 3;
         frameCountPerAnimation[2] = 3;
 
-        Texture playerTexture = assetManager.Textures["hookwbait"];
+        Texture playerTexture = AssetManager.Instance.Textures["hookwbait"];
         sprite = new Sprite(playerTexture);
         sprite.TextureRect = new IntRect(
             0, 0,
@@ -51,9 +52,10 @@ public class Player : GameObject
             (int)(playerTexture.Size.Y / PLAYER_TILING_Y)
         );
         textureSize = new Vector2f(sprite.Texture.Size.X/PLAYER_TILING_X, sprite.Texture.Size.Y/PLAYER_TILING_Y);
-        Vector2f center = textureSize * 0.5f * scale;
+        sprite.Scale *= scale;
+        Vector2f center = textureSize * 0.5f;
         sprite.Origin = center;
-        CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y*scale * hitboxscale);
+        CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X/ PLAYER_TILING_X * scale * hitboxscale, textureSize.Y/ PLAYER_TILING_Y*scale * hitboxscale);
     
 
     }
@@ -177,5 +179,10 @@ public class Player : GameObject
         window.SetView(view);
 
         window.Draw(sprite);
+    }
+
+    public Vector2f GetPosition()
+    {
+        return sprite.Position;
     }
 }
