@@ -13,6 +13,7 @@ public class Player : GameObject
     private float animationSpeed = 10;
 
     private Vector2f move = new Vector2f(0, 0);
+    public FloatRect CollisionBox;
 
     private int[] frameCountPerAnimation = new int[3];
     private AnimationType currentAnimation = AnimationType.Down;
@@ -26,8 +27,16 @@ public class Player : GameObject
     private Vector2f MoveVec;
     private float MoveScale = 50;
     private float MoveCooldown = 0;
-    bool startmovement = false;
+    public bool startmovement = false;
     private float DeltaTime;
+    float CameraX = 0;
+    bool CameramoveX = true;
+    public bool collided = false;
+    Vector2f textureSize;
+    float scale = 4;
+    float hitboxscale = 0.9f;
+    View view;
+
     public override void Initialize(AssetManager assetManager)
     {
         frameCountPerAnimation[0] = 1;
@@ -41,17 +50,27 @@ public class Player : GameObject
             (int)(playerTexture.Size.X / PLAYER_TILING_X),
             (int)(playerTexture.Size.Y / PLAYER_TILING_Y)
         );
-        sprite.Scale *= (float) 3;
-        sprite.Position = new Vector2f(0, 0);
+        textureSize = new Vector2f(sprite.Texture.Size.X/PLAYER_TILING_X, sprite.Texture.Size.Y/PLAYER_TILING_Y);
+        Vector2f center = textureSize * 0.5f * scale;
+        sprite.Origin = center;
+        CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y*scale * hitboxscale);
+    
+
     }
 
     public override void Update(float deltaTime, InputManager inputman)
     {
         animationTime += deltaTime * animationSpeed;
         
-        if(MoveStarted(inputman)){
+        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
+        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
+
+        
+        if(MoveStarted(inputman) && !collided){
             Move(deltaTime, inputman);
         }
+
+        CollisionBox = sprite.GetGlobalBounds();
 
         int animationFrame = (int)animationTime % frameCountPerAnimation[(int)currentAnimation];
 
@@ -69,15 +88,15 @@ public class Player : GameObject
     private bool MoveStarted(InputManager inputman){
         if(!(startmovement) && inputman.GetKeyDown(Keyboard.Key.Space)){
             startmovement = true;
-            move = new Vector2f(5, -4) * MoveScale;
+            move = new Vector2f(10, -8) * MoveScale;
         }
         return startmovement;
     }
 
     //makes "floaty" movement, still needs more "jank" feel
     private void Move(float dt, InputManager inputman){
-        
-        if(MoveCooldown <= 0){
+
+        if(MoveCooldown <= 0 && sprite.Position.Y >= 0){
             if(inputman.GetKeyDown(Keyboard.Key.A)){
                 move = new Vector2f(-4, -2) * MoveScale;
                 MoveCooldown = (float)0.5;
@@ -93,9 +112,11 @@ public class Player : GameObject
                 MoveCooldown = (float)0.5;
                 currentAnimation = AnimationType.Down; 
             }
+
         }else{
             MoveCooldown -= dt;
         }
+        CheckCameraCollision();
 
         if(move.X == 0){
             //do nothing, but skip other checks
@@ -114,8 +135,26 @@ public class Player : GameObject
         }else{
             move += new Vector2f(0, 1) * dt * MoveScale;
         }
+
+        if(sprite.Position.Y <= 0){
+            move += new Vector2f(0, 1) * dt * MoveScale * 10;
+        }
         sprite.Position += move * dt;
     }
+
+    private void CheckCameraCollision(){
+        if(sprite.Position.X <= (view.Center).X - view.Size.X/2){
+            if(move.X < 0){
+                move.X = 0;
+            }
+        }else if(sprite.Position.X + sprite.Scale.X*sprite.Texture.Size.X/PLAYER_TILING_X>= (view.Center).X + view.Size.X/2){
+            if(move.X > 0){
+                move.X = 0;
+            }
+        } 
+    }
+    
+    
     private Vector2f GetCoords(){
         FloatRect bounds = sprite.GetLocalBounds();
         float centerX = bounds.Left + bounds.Width / 5;
@@ -125,8 +164,16 @@ public class Player : GameObject
 
     public override void Draw(RenderWindow window)
     {
-        View view = window.GetView();
-        view.Center = new Vector2f(0, sprite.Position.Y);
+        view = window.GetView();
+        
+        if(sprite.Position.Y <0 && CameramoveX){
+            CameraX = sprite.Position.X;
+        }
+        if(sprite.Position.Y >0 && CameramoveX){
+            CameramoveX = false;
+        }
+
+        view.Center = new Vector2f(CameraX, sprite.Position.Y);
         window.SetView(view);
 
         window.Draw(sprite);

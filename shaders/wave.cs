@@ -2,7 +2,7 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-class CircularWaveEffect
+public class CircularWaveEffect
 {
     private Shader shader;
     private VertexArray vertices;

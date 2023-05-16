@@ -21,6 +21,10 @@ public class AssetManager
 
     public void Initialize(){
         LoadTexture("hookwbait", "./Assets/hookwbait.png");
+        LoadTexture("turtle", "./Assets/startFish.png");
+        LoadTexture("dock", "./Assets/Dock.png");
+        LoadTexture("water", "./Assets/wave.png");
+        LoadTexture("fish", "./Assets/Fish.png");
         //LoadMusic("track1", "./Assets/musicTrack.ogg");
         //LoadSoundBuffer("sound1", "./Assets/completeSound.wav");
     }

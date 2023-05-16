@@ -2,21 +2,13 @@ using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
-public enum AnimationType
-{
-    IdleDown = 0,
-    IdleLeft = 1,
-    IdleUp = 2,
-    IdleRight = 3,
-    RunDown = 4,
-}
-
 public class Game
 {
     private RenderWindow window;
     private List<GameObject> gameObjects = new();
-    private CircularWaveEffect waveEffect;
+    private List<Shaders> Shaders = new();
     private float gameTime = 0;
+    Player player;
     public Game()
     {
         VideoMode mode = new VideoMode(1000, 1000);
@@ -59,16 +51,20 @@ public class Game
     {
         gameTime += deltaTime;
 
-        if (InputManager.Instance.GetKeyDown(Keyboard.Key.Space))
-        {
-            Console.WriteLine("Space key was pressed this frame.");
-        }
-
         foreach (GameObject gameObject in gameObjects)
         {
             gameObject.Update(deltaTime, InputManager.Instance);
+
+            if(gameObject is FishManager FishMan){
+                FishMan.SpawnFish(player.startmovement, window.GetView().Size, window.GetView().Center);
+                int coll = FishMan.ColisionCheck(player.CollisionBox);
+                if(coll > 0){
+                    player.collided = true;
+                }
+                FishMan.MoveToGoal(player.Position);
+            }
         }
-        waveEffect.Update(deltaTime);
+        //waveEffect.Update(deltaTime);
 
         InputManager.Instance.Update(deltaTime);
     }
@@ -78,11 +74,16 @@ public class Game
         window.Clear(Color.Blue);
         DrawFloor(new Vector2f(-200, -200), new Vector2i(10, 10), new Vector2i(50, 50));
 
+        foreach (Shaders shader in Shaders)
+        {
+            shader.Draw(window, gameObjects[0].Position);
+        }
+
         foreach (GameObject gameObject in gameObjects)
         {
             gameObject.Draw(window);
         }
-        waveEffect.Draw(window, RenderStates.Default);
+        //waveEffect.Draw(window, RenderStates.Default);
 
         window.Display();
     }
@@ -122,12 +123,27 @@ public class Game
         window.SetView(view);
         window.SetFramerateLimit(120);
 
-        Player player = new Player();
+        player = new Player();
         player.Initialize(AssetManager.Instance);
 
-        player.Position += new Vector2f(10, 10);
-
         gameObjects.Add(player);
-        waveEffect= new CircularWaveEffect(window.Size);
+
+        Turtle turtle = new Turtle();
+        turtle.Initialize(AssetManager.Instance);
+
+        gameObjects.Add(turtle);
+
+        Water water = new Water();
+        water.Initialize(AssetManager.Instance);
+
+        gameObjects.Add(water);
+
+        FishManager FishMan = new FishManager();
+        FishMan.Initialize(AssetManager.Instance);
+
+        gameObjects.Add(FishMan);
+        
+        hueShader hue = new hueShader();
+        Shaders.Add(hue);
     }
 }
