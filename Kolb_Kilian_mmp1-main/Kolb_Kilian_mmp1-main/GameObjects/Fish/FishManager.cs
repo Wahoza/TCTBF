@@ -7,15 +7,18 @@ public class FishManager : Fish
     float timeSinceSpawn = 0;
     Random random = new Random();
     bool FishBool;
+    float depth = 0;
+    float maxBigCount = 3;
     public override void Initialize()
     {
         FishList = new List<Fish>();
+        maxBigCount = 3;
     }
 
     public override void Update(float deltaTime, InputManager inputman)
     {
-        int n = random.Next(1, 1000);
-        if(n >985){
+        int n = random.Next(1, 10000);
+        if(n >9990-depth){
             FishBool = true;
         }else{
             FishBool = false;
@@ -27,7 +30,7 @@ public class FishManager : Fish
 
     public void SpawnFish(bool started, Vector2f area, Vector2f center){
         if(started && FishBool){
-            int FishNum = random.Next(1, 4);
+            int FishNum = random.Next(1, 6);
             float spawnX = 0;
             float spawnY = 0;
             if(random.Next(1,3)%2 == 0){
@@ -60,10 +63,25 @@ public class FishManager : Fish
                 FishList.Add(NormalFish);
                 break;
             case 3:
+                SquidFish SquidFish = new SquidFish();
+                SquidFish.Initialize();
+                SquidFish.SetPositon(pos);
+                FishList.Add(SquidFish);
+                break;
+            case 4:
                 DriftFish DriftFish = new DriftFish();
                 DriftFish.Initialize();
                 DriftFish.SetPositon(pos);
                 FishList.Add(DriftFish);
+                break;
+            case 5:
+            if(maxBigCount >0 && depth > 100){
+                maxBigCount--;
+                BiggestFish BiggestFish = new BiggestFish();
+                BiggestFish.Initialize();
+                BiggestFish.SetPositon(pos);
+                FishList.Add(BiggestFish);
+            }
                 break;
             default:
                 break;
@@ -92,9 +110,15 @@ public class FishManager : Fish
         foreach(Fish fish in FishList){
             fish.MoveToGoal(player);
         }
+        depth = player.Y /100;
     }
     public override void SetPositon(Vector2f position)
     {
 
+    }
+    //this function exists, but FishManager doesnt have a position;
+    public override Vector2f GetPosition()
+    {
+        return new Vector2f(0, 0);
     }
 }

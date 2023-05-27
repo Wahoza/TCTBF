@@ -63,9 +63,6 @@ public class Player : GameObject
     public override void Update(float deltaTime, InputManager inputman)
     {
         animationTime += deltaTime * animationSpeed;
-        
-        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
-        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
         
         if(MoveStarted(inputman) && !collided){
@@ -83,6 +80,9 @@ public class Player : GameObject
             sprite.TextureRect.Width,
             sprite.TextureRect.Height
         );
+        
+        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
+        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
     }
     private bool MoveStarted(InputManager inputman){
@@ -133,7 +133,7 @@ public class Player : GameObject
         if((int)move.Y <= 0){
             move += new Vector2f(0, 1) * dt * MoveScale * 5;
         }else{
-            move += new Vector2f(0, 1) * dt * MoveScale;
+            move += new Vector2f(0, 1) * dt * MoveScale * 0.6f;
         }
 
         if(sprite.Position.Y <= 0){

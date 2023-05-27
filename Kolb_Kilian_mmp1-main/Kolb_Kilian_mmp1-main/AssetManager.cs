@@ -21,11 +21,23 @@ public class AssetManager
 
     public void Initialize(){
         LoadTexture("hookwbait", "./Assets/hookwbait.png");
-        LoadTexture("turtle", "./Assets/startFish.png");
-        LoadTexture("dock", "./Assets/Dock.png");
-        LoadTexture("water", "./Assets/wave.png");
-        LoadTexture("fish", "./Assets/Fish.png");
         LoadTexture("lineEnd", "./Assets/line-end.png");
+        LoadTexture("turtle", "./Assets/startFish.png");
+
+        LoadTexture("Dock", "./Assets/Dock.png");
+        LoadTexture("Water", "./Assets/wave.png");
+
+        LoadTexture("fish", "./Assets/Fish.png");
+        LoadTexture("DriftFish", "./Assets/Soap.png");
+        LoadTexture("NormalFish", "./Assets/Orgle.png");
+        LoadTexture("SquidFish", "./Assets/Squid.png");
+        LoadTexture("BulletFish", "./Assets/Bullet.png");
+        LoadTexture("BiggestFish", "./Assets/BigFish.png");
+
+        LoadTexture("Gradiant","./Assets/gradient.png");
+        LoadTexture("Bubbles","./Assets/Bubble.png");
+
+        LoadFont("PixelFont", "./Assets/Pixeled.ttf");
         //LoadMusic("track1", "./Assets/musicTrack.ogg");
         //LoadSoundBuffer("sound1", "./Assets/completeSound.wav");
     }

@@ -23,6 +23,7 @@ public static class Utils{
         }else{
         normalized = new Vector2f (0, 0);    
         }
+
         return normalized;
     }
 

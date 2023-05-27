@@ -70,6 +70,9 @@ public class Game
             if(gameObject is Turtle turtle){
                 turtle.SetEndPoint(player.GetHookPosition());
             }
+            if(gameObject is Gradiant gradiant){
+                gradiant.SetPositon(player.GetHookPosition());
+            }
         }
         foreach(Shaders shader in Shaders){
             shader.Update(deltaTime, player.GetPosition());
@@ -98,12 +101,18 @@ public class Game
 
     private void Initialize()
     {
+        gameObjects.Clear();
         InputManager.Instance.Initialize(window);
         AssetManager.Instance.Initialize();
 
         View view = new View(new Vector2f(), (Vector2f)window.Size);
         window.SetView(view);
         window.SetFramerateLimit(120);
+
+        WaterBackground waterBackground = new WaterBackground();
+        waterBackground.Initialize();
+        waterBackground.getArea(view.Size);
+        gameObjects.Add(waterBackground);
 
         player = new Player();
         player.Initialize();
@@ -116,7 +125,7 @@ public class Game
 
         gameObjects.Add(turtle);
 
-        Water water = new Water();
+        WaterwDock water = new WaterwDock();
         water.Initialize();
 
         gameObjects.Add(water);
@@ -126,6 +135,12 @@ public class Game
 
         gameObjects.Add(FishMan);
         
+        Gradiant gradiant = new Gradiant();
+        gradiant.Initialize();
+        gradiant.SetStats(10, view.Size);
+
+        gameObjects.Add(gradiant);
+
         wave = new waveShader();
         wave.Initialize(window.GetView().Size);
         Shaders.Add(wave);

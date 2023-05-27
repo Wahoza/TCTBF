@@ -126,8 +126,10 @@ public class Turtle : GameObject
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon){
         if(shaderon){
             window.Draw(LineEnd, states);
+            window.Draw(line, states);
         }else{
             window.Draw(LineEnd);
+            window.Draw(line);
         }
         window.Draw(sprite);
         
