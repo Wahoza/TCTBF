@@ -9,7 +9,7 @@ public class BulletFish : Fish
     private Vector2f movevec;
     FloatRect CollisionBox;
     private float scale = 6;
-    private float hitboxscale = 0.9f;
+    private float hitboxscale = 0.6f;
     Vector2f textureSize;
     float wait = 1;
     float speed = 2;
@@ -83,8 +83,8 @@ public class BulletFish : Fish
             sprite.Position += movevec * speed * deltaTime;
             speed = 1000;
         }
-        if(sprite.Position.Y< 30){
-            SetPositon(new Vector2f(sprite.Position.X, 30));
+        if(sprite.Position.Y< 100){
+            SetPositon(new Vector2f(sprite.Position.X, 100));
         }
         if(Utils.Angle(movevec) >= Math.PI){
             sprite.Scale = new Vector2f(scale, -scale);
@@ -108,6 +108,8 @@ public class BulletFish : Fish
     public override void SetPositon(Vector2f position)
     {
         sprite.Position = position;
+        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
+        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
     }
     public override Vector2f GetPosition()
     {

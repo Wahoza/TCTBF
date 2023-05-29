@@ -6,7 +6,7 @@ using SFML.Window;
 public class Gradiant : GameObject
 {
     private Sprite? gradiant;
-    float intensity = 10;
+    float intensity = 100;
     Vector2f area;
     public override void Initialize()
     {

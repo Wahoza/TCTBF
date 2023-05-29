@@ -18,7 +18,7 @@ public class FishManager : Fish
     public override void Update(float deltaTime, InputManager inputman)
     {
         int n = random.Next(1, 10000);
-        if(n >9990-depth){
+        if(n >9980-depth){
             FishBool = true;
         }else{
             FishBool = false;
@@ -75,7 +75,7 @@ public class FishManager : Fish
                 FishList.Add(DriftFish);
                 break;
             case 5:
-            if(maxBigCount >0 && depth > 100){
+            if(maxBigCount >0 && depth > 0){
                 maxBigCount--;
                 BiggestFish BiggestFish = new BiggestFish();
                 BiggestFish.Initialize();
@@ -120,5 +120,8 @@ public class FishManager : Fish
     public override Vector2f GetPosition()
     {
         return new Vector2f(0, 0);
+    }
+    public List<Fish> GetFish(){
+        return FishList;
     }
 }

@@ -1,4 +1,4 @@
-//This Fish will move without any goal in mind
+//This Fish will move twoard the hook but be scared away
 using SFML.Graphics;
 using SFML.System;
 
@@ -96,8 +96,8 @@ public class NormalFish : Fish
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
 
-        if(sprite.Position.Y< 30){
-            SetPositon(new Vector2f(sprite.Position.X, 30));
+        if(sprite.Position.Y< 100){
+            SetPositon(new Vector2f(sprite.Position.X, 100));
         }
         
     }

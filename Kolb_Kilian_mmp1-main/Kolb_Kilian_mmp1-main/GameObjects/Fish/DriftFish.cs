@@ -5,7 +5,6 @@ using SFML.System;
 public class DriftFish : Fish
 {
     private Sprite sprite;
-    private bool locked = false;
     private Vector2f movevec = new Vector2f(0, 0);
     FloatRect CollisionBox;
     private float scale = 7;
@@ -73,8 +72,8 @@ public class DriftFish : Fish
         sprite.Rotation = Utils.Angle(movevec) *  360 /2 /(float)Math.PI;
         CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
-        if(sprite.Position.Y< 30){
-            SetPositon(new Vector2f(sprite.Position.X, 30));
+        if(sprite.Position.Y< 100){
+            SetPositon(new Vector2f(sprite.Position.X, 100));
         }
     }
 
@@ -89,6 +88,8 @@ public class DriftFish : Fish
     public override void SetPositon(Vector2f position)
     {
         sprite.Position = position;
+        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
+        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
     }
     private void CalculateMovevec(float deltaTime){
         if(((Utils.AngleBetween(movevec, TargetPosition-sprite.Position) > 0.1) && initialFind)|| passedtime >wait * 100){

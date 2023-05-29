@@ -33,7 +33,11 @@ public class Turtle : GameObject
     Vector2f controlPoint;
     const int NumPoints = 100;
     private Sprite? LineEnd;
+    private Sprite? LineStart;
+
     private float LineEndScale = 3f;
+    private float LineStartScale = 4f;
+    float lineanimationTime;
     public override void Initialize()
     {
         //turtle related
@@ -50,10 +54,18 @@ public class Turtle : GameObject
 
         //line related
         Texture lineEndTexture = AssetManager.Instance.Textures["lineEnd"];
+        Texture lineStartTexture = AssetManager.Instance.Textures["lineStart"];
+
         LineEnd = new Sprite(lineEndTexture);
+        LineStart = new Sprite(lineStartTexture);
+
         Vector2f center = new Vector2f(LineEnd.Texture.Size.X * 0.5f, LineEnd.Texture.Size.Y * 0.5f);
         LineEnd.Origin = center;
         LineEnd.Scale *= LineEndScale;
+
+        center = new Vector2f(LineStart.Texture.Size.X * 0.5f, LineStart.Texture.Size.Y * 0.5f);
+        LineStart.Origin = center;
+        LineStart.Scale = new Vector2f(5, 1) * LineStartScale;
 
         line = new VertexArray(PrimitiveType.LineStrip);
         lineVisible = false;
@@ -69,11 +81,16 @@ public class Turtle : GameObject
 
             line.Append(new Vertex(point, Color.Black));
         }
+        lineanimationTime = 0;
+        
     }
     
     public void SetPositon(Vector2f pos){
         sprite.Position = pos;
-        startPoint = new Vector2f(turtleTexture.Size.X/TURTLE_TILING_X * scale, turtleTexture.Size.Y / TURTLE_TILING_Y * scale + 0.2f) + pos;
+
+        startPoint = new Vector2f(turtleTexture.Size.X/TURTLE_TILING_X/scale * 0.5f, turtleTexture.Size.Y / TURTLE_TILING_Y/scale*4f) + sprite.Position;
+        endPoint = startPoint;
+        controlPoint = startPoint;
     }
 
     public override void Update(float deltaTime, InputManager inputman){
@@ -92,12 +109,27 @@ public class Turtle : GameObject
             );
             if(animationFrame == frameCountPerAnimation[(int)currentAnimation]-1){
                 initAnim = false;
-                lineVisible = true;
             }
+
+            //line animation this was pain
+            float updownspeed = 55;
+            if(animationFrame < 4 && animationFrame > 1){
+                lineanimationTime += deltaTime * animationSpeed;
+                startPoint += new Vector2f(90, -10/lineanimationTime/lineanimationTime).Normalize() * deltaTime * scale * 150;
+            }
+            if(animationFrame == 5){
+                startPoint += new Vector2f(0.25f, 1).Normalize() * updownspeed * deltaTime * scale;
+            }
+            else if (animationFrame == 7){
+                startPoint += new Vector2f(-0.25f, -1).Normalize() * updownspeed * deltaTime * scale;
+            }
+            controlPoint += new Vector2f(3, 1).Normalize() * 200* deltaTime;
         }
+
 
         //line update code starts here
         line.Clear();
+        controlPoint = new Vector2f((endPoint.X-startPoint.X)/2, (endPoint.Y - startPoint.Y)/2);
         for (int i = 0; i <= NumPoints; i++)
         {
             float t = i / (float)NumPoints;
@@ -107,6 +139,7 @@ public class Turtle : GameObject
         }
         LineEnd.Position = endPoint;
     }
+    
     public bool Throw(InputManager inputman){
         if(!IsFishing && inputman.GetKeyDown(Keyboard.Key.Space)){
             IsFishing = false;
@@ -114,14 +147,6 @@ public class Turtle : GameObject
         }
         return IsFishing;
     }
-
-    //public void UpdateLine(Vector2f Linegoal){
-    //    if(initAnim){
-//
-    //    }else{
-//
-    //    }
-    //}
 
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon){
         if(shaderon){
@@ -132,11 +157,15 @@ public class Turtle : GameObject
             window.Draw(line);
         }
         window.Draw(sprite);
-        
+        //window.Draw(LineStart);
     }
 
     internal void SetEndPoint(Vector2f position)
     {
-        endPoint = position;
+        endPoint = position + new Vector2f(0,-3);
+    }
+
+    public Vector2f GetLineStart(){
+        return startPoint;
     }
 }

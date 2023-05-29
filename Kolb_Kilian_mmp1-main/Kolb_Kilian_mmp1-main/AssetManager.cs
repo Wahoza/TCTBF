@@ -23,6 +23,7 @@ public class AssetManager
         LoadTexture("hookwbait", "./Assets/hookwbait.png");
         LoadTexture("lineEnd", "./Assets/line-end.png");
         LoadTexture("turtle", "./Assets/startFish.png");
+        LoadTexture("lineStart", "./Assets/rod-assist.png");
 
         LoadTexture("Dock", "./Assets/Dock.png");
         LoadTexture("Water", "./Assets/wave.png");
@@ -36,6 +37,8 @@ public class AssetManager
 
         LoadTexture("Gradiant","./Assets/gradient.png");
         LoadTexture("Bubbles","./Assets/Bubble.png");
+
+        LoadTexture("Mouse", "./Assets/Mouse.png");
 
         LoadFont("PixelFont", "./Assets/Pixeled.ttf");
         //LoadMusic("track1", "./Assets/musicTrack.ogg");

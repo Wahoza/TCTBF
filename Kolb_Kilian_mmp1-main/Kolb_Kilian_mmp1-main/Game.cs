@@ -6,19 +6,23 @@ public class Game
 {
     private RenderWindow window;
     private List<GameObject> gameObjects = new();
+    private List<Fish> FishListParse = new();
     private List<Shaders> Shaders = new();
     private float gameTime = 0;
     Player player;
     waveShader wave;
-    int coll = 0; 
+    int coll = 0;
+    bool qteActive; 
     public Game()
     {
-        VideoMode mode = new VideoMode(1000, 1000);
+        VideoMode mode = new VideoMode(1900, 1080);
         string title = "Fishing Game";
         window = new RenderWindow(mode, title);
 
         window.Closed += OnWindowClose;
         window.Resized += OnWindowResized;
+
+        window.SetMouseCursorVisible(false);
     }
 
     private void OnWindowResized(object? sender, SizeEventArgs e)
@@ -53,29 +57,43 @@ public class Game
     {
         gameTime += deltaTime;
 
-        foreach (GameObject gameObject in gameObjects)
-        {
-            gameObject.Update(deltaTime, InputManager.Instance);
+        if(!player.restart){
+            if(!qteActive){
+            foreach (GameObject gameObject in gameObjects)
+            {
+                    gameObject.Update(deltaTime, InputManager.Instance);
 
-            if(gameObject is FishManager FishMan){
-                //if(coll == 0){
-                //    coll = FishMan.ColisionCheck(player.CollisionBox);
-                //    if(coll > 0){
-                //        //player.collided = true;
-                //    }
-                //}
-                FishMan.SpawnFish(player.startmovement, window.GetView().Size, window.GetView().Center);
-                FishMan.MoveToGoal(player.GetPosition());
+                    if(gameObject is FishManager FishMan){
+                        if(coll == 0){
+                            coll = FishMan.ColisionCheck(player.CollisionBox);
+                            if(coll > 0){
+                                player.collided = true;
+                            }
+                        }
+                        FishMan.SpawnFish(player.startmovement, window.GetView().Size, window.GetView().Center);
+                        FishMan.MoveToGoal(player.GetPosition());
+                        FishListParse = FishMan.GetFish();
+                    }
+                    if(gameObject is Turtle turtle){
+                        turtle.SetEndPoint(player.GetHookPosition());
+                        player.SetReturnPoint(turtle.GetLineStart());
+                    }
+                    if(gameObject is Gradiant gradiant){
+                        gradiant.SetPositon(player.GetHookPosition());
+                    }
+                    if(gameObject is BubbleManager BubbleMan){
+                        BubbleMan.SetFish(FishListParse);
+                    }
+                }
+                foreach(Shaders shader in Shaders){
+                    shader.Update(deltaTime, player.GetPosition());
+                }
+            }else{
+                player.Update(deltaTime, InputManager.Instance);
             }
-            if(gameObject is Turtle turtle){
-                turtle.SetEndPoint(player.GetHookPosition());
-            }
-            if(gameObject is Gradiant gradiant){
-                gradiant.SetPositon(player.GetHookPosition());
-            }
-        }
-        foreach(Shaders shader in Shaders){
-            shader.Update(deltaTime, player.GetPosition());
+            qteActive = player.GetQTEstatus();
+        }else{
+            GameInitialize();
         }
 
         InputManager.Instance.Update(deltaTime);
@@ -99,11 +117,22 @@ public class Game
         window.DispatchEvents();
     }
 
-    private void Initialize()
+    private void OnWindowResized(object? sender, EventArgs e)
     {
-        gameObjects.Clear();
+        window.Size = new Vector2u(window.Size.X, window.Size.X);
+    }
+    private void Initialize(){
         InputManager.Instance.Initialize(window);
         AssetManager.Instance.Initialize();
+
+        player = new Player();
+
+        GameInitialize();
+    }
+    private void GameInitialize()
+    {
+        coll = 0;
+        gameObjects.Clear();
 
         View view = new View(new Vector2f(), (Vector2f)window.Size);
         window.SetView(view);
@@ -113,17 +142,6 @@ public class Game
         waterBackground.Initialize();
         waterBackground.getArea(view.Size);
         gameObjects.Add(waterBackground);
-
-        player = new Player();
-        player.Initialize();
-
-        gameObjects.Add(player);
-
-        Turtle turtle = new Turtle();
-        turtle.Initialize();
-        turtle.SetPositon(new Vector2f(0, -40));
-
-        gameObjects.Add(turtle);
 
         WaterwDock water = new WaterwDock();
         water.Initialize();
@@ -141,9 +159,33 @@ public class Game
 
         gameObjects.Add(gradiant);
 
+        BubbleManager bubbleManager = new BubbleManager();
+        bubbleManager.Initialize();
+        gameObjects.Add(bubbleManager);
+
+        player.Initialize();
+
+        gameObjects.Add(player);
+
+        Turtle turtle = new Turtle();
+        turtle.Initialize();
+        turtle.SetPositon(new Vector2f(0, -40));
+        gameObjects.Add(turtle);
+
+        Hud hud = new Hud();
+        hud.Initialize();
+        gameObjects.Add(hud);
+
+        FishMouse Fm = new FishMouse();
+        Fm.Initialize();
+        Fm.SetFishMouseArea(view.Size);
+        gameObjects.Add(Fm);
+
         wave = new waveShader();
         wave.Initialize(window.GetView().Size);
         Shaders.Add(wave);
+
+        qteActive = false;
     }
     
 }

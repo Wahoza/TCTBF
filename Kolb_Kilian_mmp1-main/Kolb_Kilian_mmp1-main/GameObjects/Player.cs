@@ -30,16 +30,33 @@ public class Player : GameObject
     private float MoveCooldown = 0;
     public bool startmovement = false;
     private float DeltaTime;
-    float CameraX = 0;
-    bool CameramoveX = true;
     public bool collided = false;
+    public bool restart = false;
+
+
     Vector2f textureSize;
     float scale = 3;
-    float hitboxscale = 0.7f;
-    View view;
+    float hitboxscale = 0.5f;
 
+
+    View view;
+    float CameraX = 0;
+    bool CameramoveX = true;
+
+    FishQTE qte;
+    bool qteActive;
+    bool[] completed = new bool[2];
+    private Vector2f returnPoint;
     public override void Initialize()
     {
+        move = new Vector2f(0, 0);
+        CameraX = 0;
+        CameramoveX = true;
+        startmovement = false;
+        collided = false;
+        restart = false;
+        qteActive = false;
+        completed = new bool[]{false, false};
         frameCountPerAnimation[0] = 1;
         frameCountPerAnimation[1] = 3;
         frameCountPerAnimation[2] = 3;
@@ -56,17 +73,42 @@ public class Player : GameObject
         Vector2f center = textureSize * 0.5f;
         sprite.Origin = center;
         CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y*scale * hitboxscale);
-    
 
+        qte = new FishQTE();
+        qte.Initialize();
+        qteActive = false;
     }
 
     public override void Update(float deltaTime, InputManager inputman)
     {
         animationTime += deltaTime * animationSpeed;
-
         
         if(MoveStarted(inputman) && !collided){
             Move(deltaTime, inputman);
+
+        }else if (!completed[0] && collided){
+            qteActive = true;
+            qte.SetPositon(sprite.Position);
+            qte.Update(deltaTime, inputman);
+
+            if(qte.GetStatus() == 0){
+                completed = new bool[] {true, false};  
+            }else if(qte.GetStatus() == 1){
+                completed = new bool[] {true, true};
+            }else if(qte.GetStatus() == 2){
+                completed = new bool[] {false, false};
+            }
+
+        }else{
+            qteActive = false;
+            if(completed[0]){
+                if(Utils.Distance(sprite.Position, returnPoint) > 20){
+                    sprite.Position += (returnPoint -sprite.Position).Normalize() * 1000 * deltaTime;
+                    currentAnimation = AnimationType.Down;
+                }else{
+                    restart = true;
+                }
+            }
         }
 
         int animationFrame = (int)animationTime % frameCountPerAnimation[(int)currentAnimation];
@@ -86,7 +128,7 @@ public class Player : GameObject
 
     }
     private bool MoveStarted(InputManager inputman){
-        if(!(startmovement) && inputman.GetKeyDown(Keyboard.Key.Space)){
+        if(!(startmovement) && InputManager.Instance.GetKeyDown(Keyboard.Key.Space)){
             startmovement = true;
             move = new Vector2f(10, -8) * MoveScale;
         }
@@ -96,7 +138,7 @@ public class Player : GameObject
     //makes "floaty" movement, still needs more "jank" feel
     private void Move(float dt, InputManager inputman){
 
-        if(MoveCooldown <= 0 && sprite.Position.Y >= 0){
+        if(MoveCooldown <= 0 && sprite.Position.Y >= 100){
             if(inputman.GetKeyDown(Keyboard.Key.A)){
                 move = new Vector2f(-4, -2) * MoveScale;
                 MoveCooldown = (float)0.5;
@@ -165,14 +207,20 @@ public class Player : GameObject
             CameramoveX = false;
         }
 
-        view.Center = new Vector2f(CameraX, sprite.Position.Y);
+        if(!completed[0] && !qteActive){
+            view.Center = new Vector2f(CameraX, sprite.Position.Y);
+        }else{
+            view.Center = sprite.Position;
+        }
         window.SetView(view);
 
-        DrawUtils.DrawRect(Color.Red, CollisionBox, window);
         if(sprite.Position.Y <0 || !shaderon){
             window.Draw(sprite);
         }else{
             window.Draw(sprite, states);
+        }
+        if(collided && !completed[0]){
+            qte.Draw(window, states, shaderon);
         }
 
     }
@@ -193,5 +241,14 @@ public class Player : GameObject
         else{
             return new Vector2f (pos.X + CollisionBox.Width/2, pos.Y);
         }
+    }
+    public bool[] GetCompleted(){
+        return completed;
+    }
+    public bool GetQTEstatus(){
+        return qteActive;
+    }
+    public void SetReturnPoint(Vector2f _returnPoint){
+        returnPoint = _returnPoint;
     }
 }

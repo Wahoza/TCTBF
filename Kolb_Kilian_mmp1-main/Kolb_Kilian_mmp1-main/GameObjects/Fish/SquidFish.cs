@@ -9,7 +9,7 @@ public class SquidFish : Fish
     private Vector2f movevec;
     FloatRect CollisionBox;
     private float scale = 3;
-    private float hitboxscale = 0.9f;
+    private float hitboxscale = 0.5f;
     float resetmovevectime;
     float speed;
     Vector2f textureSize;
@@ -80,8 +80,8 @@ public class SquidFish : Fish
         CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
-        if(sprite.Position.Y< 30){
-                SetPositon(new Vector2f(sprite.Position.X, 30));
+        if(sprite.Position.Y<  100){
+                SetPositon(new Vector2f(sprite.Position.X, 100));
         }
     }
 
@@ -97,6 +97,8 @@ public class SquidFish : Fish
     public override void SetPositon(Vector2f position)
     {
         sprite.Position = position;
+        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
+        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
     }
     public override Vector2f GetPosition(){
         return sprite.Position;
