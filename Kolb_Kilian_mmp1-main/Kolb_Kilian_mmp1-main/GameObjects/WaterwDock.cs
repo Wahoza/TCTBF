@@ -60,7 +60,7 @@ public class WaterwDock : GameObject
             window.Draw(water);
         }
 
-        for(float b = -windowlengthX/2; b<=0; b += dock.Scale.X * dock.Texture.Size.X / 1.6f){
+        for(float b = -windowlengthX; b<=0; b += dock.Scale.X * dock.Texture.Size.X / 1.6f){
             dock.Position = new Vector2f(b-30, -25);
             window.Draw(dock);
         }

@@ -20,29 +20,26 @@ public class AssetManager
     }
 
     public void Initialize(){
-        LoadTexture("hookwbait", "./Assets/hookwbait.png");
-        LoadTexture("lineEnd", "./Assets/line-end.png");
-        LoadTexture("turtle", "./Assets/startFish.png");
-        LoadTexture("lineStart", "./Assets/rod-assist.png");
+        LoadTexture("hookwbait", "./Assets/FishSprites/hookwbait.png");
+        LoadTexture("lineEnd", "./Assets/Other/line-end.png");
+        LoadTexture("turtle", "./Assets/Other/startFish.png");
 
-        LoadTexture("Dock", "./Assets/Dock.png");
-        LoadTexture("Water", "./Assets/wave.png");
+        LoadTexture("Dock", "./Assets/Other/Dock.png");
+        LoadTexture("Water", "./Assets/Other/wave.png");
 
-        LoadTexture("fish", "./Assets/Fish.png");
-        LoadTexture("DriftFish", "./Assets/Soap.png");
-        LoadTexture("NormalFish", "./Assets/Orgle.png");
-        LoadTexture("SquidFish", "./Assets/Squid.png");
-        LoadTexture("BulletFish", "./Assets/Bullet.png");
-        LoadTexture("BiggestFish", "./Assets/BigFish.png");
+        LoadTexture("fish", "./Assets/FishSprites/Fish.png");
+        LoadTexture("DriftFish", "./Assets/FishSprites/Soap.png");
+        LoadTexture("NormalFish", "./Assets/FishSprites/Orgle.png");
+        LoadTexture("SquidFish", "./Assets/FishSprites/Squid.png");
+        LoadTexture("BulletFish", "./Assets/FishSprites/Bullet.png");
+        LoadTexture("BiggestFish", "./Assets/FishSprites/BigFish.png");
 
-        LoadTexture("Gradiant","./Assets/gradient.png");
-        LoadTexture("Bubbles","./Assets/Bubble.png");
+        LoadTexture("Gradiant","./Assets/Other/gradient.png");
+        LoadTexture("Bubbles","./Assets/FishSprites/Bubble.png");
 
-        LoadTexture("Mouse", "./Assets/Mouse.png");
+        LoadTexture("Mouse", "./Assets/HudSprites/Mouse.png");
 
-        LoadFont("PixelFont", "./Assets/Pixeled.ttf");
-        //LoadMusic("track1", "./Assets/musicTrack.ogg");
-        //LoadSoundBuffer("sound1", "./Assets/completeSound.wav");
+        LoadFont("PixelFont", "./Assets/Fonts/Pixeled.ttf");
     }
 
     public Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();

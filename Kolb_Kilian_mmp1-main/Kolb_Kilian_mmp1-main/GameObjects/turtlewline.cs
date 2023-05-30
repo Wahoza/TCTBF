@@ -33,7 +33,6 @@ public class Turtle : GameObject
     Vector2f controlPoint;
     const int NumPoints = 100;
     private Sprite? LineEnd;
-    private Sprite? LineStart;
 
     private float LineEndScale = 3f;
     private float LineStartScale = 4f;
@@ -54,18 +53,12 @@ public class Turtle : GameObject
 
         //line related
         Texture lineEndTexture = AssetManager.Instance.Textures["lineEnd"];
-        Texture lineStartTexture = AssetManager.Instance.Textures["lineStart"];
 
         LineEnd = new Sprite(lineEndTexture);
-        LineStart = new Sprite(lineStartTexture);
 
         Vector2f center = new Vector2f(LineEnd.Texture.Size.X * 0.5f, LineEnd.Texture.Size.Y * 0.5f);
         LineEnd.Origin = center;
         LineEnd.Scale *= LineEndScale;
-
-        center = new Vector2f(LineStart.Texture.Size.X * 0.5f, LineStart.Texture.Size.Y * 0.5f);
-        LineStart.Origin = center;
-        LineStart.Scale = new Vector2f(5, 1) * LineStartScale;
 
         line = new VertexArray(PrimitiveType.LineStrip);
         lineVisible = false;
@@ -157,7 +150,6 @@ public class Turtle : GameObject
             window.Draw(line);
         }
         window.Draw(sprite);
-        //window.Draw(LineStart);
     }
 
     internal void SetEndPoint(Vector2f position)

@@ -13,6 +13,13 @@ public class Game
     waveShader wave;
     int coll = 0;
     bool qteActive; 
+    enum GameState{
+        FirstLoad = 0,
+        FishingPhase = 1,
+        ShoppigPhase = 2,
+        FinishPhase = 3
+    }
+    GameState gameState = new GameState();
     public Game()
     {
         VideoMode mode = new VideoMode(1900, 1080);
@@ -57,7 +64,7 @@ public class Game
     {
         gameTime += deltaTime;
 
-        if(!player.restart){
+        if(!player.restart && gameState == GameState.FishingPhase){
             if(!qteActive){
             foreach (GameObject gameObject in gameObjects)
             {
@@ -103,6 +110,7 @@ public class Game
     {
         window.Clear(Color.Blue);
         RenderStates states = wave.GetRenderStates();
+
         foreach (GameObject gameObject in gameObjects)
         {
             gameObject.Draw(window, states, false);
@@ -127,6 +135,8 @@ public class Game
 
         player = new Player();
 
+        gameState = GameState.FirstLoad;
+        int test = ValueParser.ParseGameState(0);
         GameInitialize();
     }
     private void GameInitialize()
@@ -161,6 +171,7 @@ public class Game
 
         BubbleManager bubbleManager = new BubbleManager();
         bubbleManager.Initialize();
+        
         gameObjects.Add(bubbleManager);
 
         player.Initialize();
@@ -188,4 +199,7 @@ public class Game
         qteActive = false;
     }
     
+    private void StoryInitialize(){
+
+    }
 }
