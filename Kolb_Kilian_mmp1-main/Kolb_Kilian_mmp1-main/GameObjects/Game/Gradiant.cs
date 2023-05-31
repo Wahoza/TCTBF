@@ -16,6 +16,7 @@ public class Gradiant : GameObject
         Vector2f textureSize = new Vector2f(texture.Size.X, texture.Size.Y);
         Vector2f center = textureSize * 0.5f;
         gradiant.Origin = center;
+        gradiant.Position = new Vector2f (0, 0);
     }
 
     public override void Update(float deltaTime, InputManager inputman)
@@ -30,16 +31,18 @@ public class Gradiant : GameObject
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
         window.Draw(gradiant);
-        DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X-(gradiant.Texture.Size.X-4)*gradiant.Scale.X/2, gradiant.Position.Y - area.Y, -area.X, area.Y*2), window);
-        DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X+(gradiant.Texture.Size.X-4)*gradiant.Scale.X/2, gradiant.Position.Y - area.Y, area.X, area.Y*2), window);
-        DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X - area.X, gradiant.Position.Y+(gradiant.Texture.Size.Y-4)*gradiant.Scale.Y/2, area.X*2, area.Y), window);
-        DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X - area.X, gradiant.Position.Y-(gradiant.Texture.Size.Y-4)*gradiant.Scale.Y/2, area.X*2, -area.Y), window);
+        if(gradiant.Position !=new Vector2f (0, 0)){
+            DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X-(gradiant.Texture.Size.X-4)*gradiant.Scale.X/2, gradiant.Position.Y - area.Y, -area.X, area.Y*2), window);
+            DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X+(gradiant.Texture.Size.X-4)*gradiant.Scale.X/2, gradiant.Position.Y - area.Y, area.X, area.Y*2), window);
+            DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X - area.X, gradiant.Position.Y+(gradiant.Texture.Size.Y-4)*gradiant.Scale.Y/2, area.X*2, area.Y), window);
+            DrawUtils.DrawRect(Color.Black, new FloatRect(gradiant.Position.X - area.X, gradiant.Position.Y-(gradiant.Texture.Size.Y-4)*gradiant.Scale.Y/2, area.X*2, -area.Y), window);
+        }
     }   
     public void SetPositon(Vector2f hook){
         gradiant.Position = hook;
     }
-    public void SetStats(float _intensity, Vector2f _area){
-        intensity = _intensity;
+    public void SetStats(Vector2f _area){
+        intensity = 75/ValueParser.ParseGameState(3);
         area = _area;
     }
 

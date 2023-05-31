@@ -119,4 +119,12 @@ public class DriftFish : Fish
     {
         return sprite.Position;
     }
+    public override void SetRotation(Vector2f Rotationvec)
+    {
+        sprite.Rotation = (float)(Utils.Angle(Rotationvec) * 360 / (2*Math.PI));
+    }
+    public override float GetScale()
+    {
+        return scale;
+    }
 }

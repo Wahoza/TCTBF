@@ -33,7 +33,7 @@ public class Player : GameObject
     public bool collided = false;
     public bool restart = false;
 
-
+    Fish CoughtFish;
     Vector2f textureSize;
     float scale = 3;
     float hitboxscale = 0.5f;
@@ -47,6 +47,8 @@ public class Player : GameObject
     bool qteActive;
     bool[] completed = new bool[2];
     private Vector2f returnPoint;
+
+    float MoveTimer;
     public override void Initialize()
     {
         move = new Vector2f(0, 0);
@@ -77,6 +79,10 @@ public class Player : GameObject
         qte = new FishQTE();
         qte.Initialize();
         qteActive = false;
+
+        MoveTimer = ValueParser.ParseGameState(2) * 15;
+
+        CoughtFish = null;
     }
 
     public override void Update(float deltaTime, InputManager inputman)
@@ -90,9 +96,10 @@ public class Player : GameObject
             qteActive = true;
             qte.SetPositon(sprite.Position);
             qte.Update(deltaTime, inputman);
-
+            currentAnimation = AnimationType.Down;
             if(qte.GetStatus() == 0){
                 completed = new bool[] {true, false};  
+                CoughtFish = null;
             }else if(qte.GetStatus() == 1){
                 completed = new bool[] {true, true};
             }else if(qte.GetStatus() == 2){
@@ -122,41 +129,51 @@ public class Player : GameObject
             sprite.TextureRect.Width,
             sprite.TextureRect.Height
         );
+        if(CoughtFish!=null && completed[1]){
+            if(CoughtFish is BiggestFish b){
+                b.Update(deltaTime, InputManager.Instance);
+            }
+
+            CoughtFish.SetPositon(sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2);
+            CoughtFish.SetRotation(GetHookPosition()-sprite.Position);
+        }
         
+
         CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
     }
     private bool MoveStarted(InputManager inputman){
-        if(!(startmovement) && InputManager.Instance.GetKeyDown(Keyboard.Key.Space)){
+        if(!(startmovement) && InputManager.Instance.GetKeyPressed(Keyboard.Key.Space)){
             startmovement = true;
             move = new Vector2f(10, -8) * MoveScale;
         }
         return startmovement;
     }
 
-    //makes "floaty" movement, still needs more "jank" feel
     private void Move(float dt, InputManager inputman){
-
-        if(MoveCooldown <= 0 && sprite.Position.Y >= 100){
-            if(inputman.GetKeyDown(Keyboard.Key.A)){
-                move = new Vector2f(-4, -2) * MoveScale;
-                MoveCooldown = (float)0.5;
-                currentAnimation = AnimationType.Left;            
+        MoveTimer -= dt;
+        if(MoveTimer >= 0){
+            if(MoveCooldown <= 0 && sprite.Position.Y >= 100){
+                if(inputman.GetKeyDown(Keyboard.Key.A)){
+                    move = new Vector2f(-4, -2) * MoveScale;
+                    MoveCooldown = (float)0.5;
+                    currentAnimation = AnimationType.Left;            
+                    }
+                if(inputman.GetKeyDown(Keyboard.Key.D)){
+                    move = new Vector2f(4, -2) * MoveScale;
+                    MoveCooldown = (float)0.5;
+                    currentAnimation = AnimationType.Right; 
                 }
-            if(inputman.GetKeyDown(Keyboard.Key.D)){
-                move = new Vector2f(4, -2) * MoveScale;
-                MoveCooldown = (float)0.5;
-                currentAnimation = AnimationType.Right; 
-            }
-            if(inputman.GetKeyDown(Keyboard.Key.S)){
-                move = new Vector2f(0, -5) * MoveScale;
-                MoveCooldown = (float)0.5;
-                currentAnimation = AnimationType.Down; 
-            }
+                if(inputman.GetKeyDown(Keyboard.Key.S)){
+                    move = new Vector2f(0, -5) * MoveScale;
+                    MoveCooldown = (float)0.5;
+                    currentAnimation = AnimationType.Down; 
+                }
 
-        }else{
-            MoveCooldown -= dt;
+            }else{
+                MoveCooldown -= dt;
+            }
         }
         CheckCameraCollision();
 
@@ -178,6 +195,9 @@ public class Player : GameObject
             move += new Vector2f(0, 1) * dt * MoveScale * 0.6f;
         }
 
+        if(move.Y > 200 && sprite.Position.Y > 30){
+            move.Y = 200;
+        }
         if(sprite.Position.Y <= 0){
             move += new Vector2f(0, 1) * dt * MoveScale * 10;
         }
@@ -200,7 +220,7 @@ public class Player : GameObject
     {
         view = window.GetView();
         
-        if(sprite.Position.Y <0 && CameramoveX){
+        if(sprite.Position.Y <100 && CameramoveX){
             CameraX = sprite.Position.X;
         }
         if(sprite.Position.Y >0 && CameramoveX){
@@ -222,7 +242,6 @@ public class Player : GameObject
         if(collided && !completed[0]){
             qte.Draw(window, states, shaderon);
         }
-
     }
 
     public Vector2f GetPosition()
@@ -231,16 +250,21 @@ public class Player : GameObject
     }
     public Vector2f GetHookPosition()
     {
-        Vector2f pos = new Vector2f(CollisionBox.Left, CollisionBox.Top + 1/scale *10);
-        if(currentAnimation == AnimationType.Left){
-            return pos;
-        }
-        else if (currentAnimation == AnimationType.Right){
-            return new Vector2f (pos.X + CollisionBox.Width, pos.Y);
-        }
-        else{
-            return new Vector2f (pos.X + CollisionBox.Width/2, pos.Y);
-        }
+        //if(!completed[0]){
+            float EmptySpaceComp = 1.7f;
+            Vector2f pos = sprite.Position - (textureSize * scale / 2)/EmptySpaceComp;
+            if(currentAnimation == AnimationType.Left){
+                return pos;
+            }
+            else if (currentAnimation == AnimationType.Right){
+                return new Vector2f (pos.X + textureSize.X * scale/EmptySpaceComp, pos.Y);
+            }
+            else{
+                return new Vector2f (pos.X + textureSize.X/2 * scale/EmptySpaceComp, pos.Y);
+            }
+        //}else{
+        //    return (sprite.Position - new Vector2f(0, CollisionBox.Height/2));
+        //}
     }
     public bool[] GetCompleted(){
         return completed;
@@ -250,5 +274,11 @@ public class Player : GameObject
     }
     public void SetReturnPoint(Vector2f _returnPoint){
         returnPoint = _returnPoint;
+    }
+    public float GetMoveTimer(){
+        return MoveTimer;
+    }
+    public void SetCoughtFish(Fish fish){
+        CoughtFish = fish;
     }
 }

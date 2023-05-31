@@ -75,7 +75,9 @@ public class Turtle : GameObject
             line.Append(new Vertex(point, Color.Black));
         }
         lineanimationTime = 0;
-        
+
+        IsFishing = false;
+        initAnim = false;
     }
     
     public void SetPositon(Vector2f pos){
@@ -134,11 +136,12 @@ public class Turtle : GameObject
     }
     
     public bool Throw(InputManager inputman){
-        if(!IsFishing && inputman.GetKeyDown(Keyboard.Key.Space)){
-            IsFishing = false;
+        if(!IsFishing && inputman.GetKeyPressed(Keyboard.Key.Space)){
+            IsFishing = true;
             initAnim = true;
+            return true;
         }
-        return IsFishing;
+        return false;
     }
 
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon){

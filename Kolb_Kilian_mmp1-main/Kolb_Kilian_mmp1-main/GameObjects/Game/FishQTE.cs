@@ -8,7 +8,7 @@ public class FishQTE : GameObject
     CircleShape OutsideCircle = new CircleShape();
     CircleShape InsideCircle = new CircleShape();
     float radius = 100;
-    float speed = 40;
+    float speed = 60;
     bool QTEcompleted = false;
     bool GoodCatch = false;
     private enum qteStatus{
@@ -38,7 +38,7 @@ public class FishQTE : GameObject
     {
        OutsideCircle.Radius -= deltaTime * speed;
        if(InputManager.Instance.GetKeyDown(Keyboard.Key.Space)){
-            if(OutsideCircle.Radius <= InsideCircle.Radius + 5  && InsideCircle.Radius -5 <= OutsideCircle.Radius){
+            if(OutsideCircle.Radius <= InsideCircle.Radius + 7  && InsideCircle.Radius -7 <= OutsideCircle.Radius){
                 status = qteStatus.Completed;
             }else{
                 status = qteStatus.Failed;

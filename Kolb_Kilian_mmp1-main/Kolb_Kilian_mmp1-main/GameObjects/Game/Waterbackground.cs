@@ -5,9 +5,15 @@ using SFML.Window;
 public class WaterBackground : GameObject{
     FloatRect Water = new FloatRect();
     Vector2f area;
+    
+    private Sprite background;
+    private float scale = 0;
     public override void Initialize()
     {
-       FloatRect Water = new FloatRect(); 
+        Water = new FloatRect(); 
+        Texture texture = AssetManager.Instance.Textures["Background"];
+        background = new Sprite(texture);
+    
     }
     public override void Update(float deltaTime, InputManager inputman){
 
@@ -15,7 +21,12 @@ public class WaterBackground : GameObject{
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
         Vector2f center = window.GetView().Center;
-        Water.Top = center.Y - area.Y/2;
+        if(center.Y - area.Y/2>70){
+            Water.Top = center.Y - area.Y/2;
+        }else{
+            Water.Top = 70;
+        }
+        
         Water.Left = center.X- area.X/2;
         byte blue;
         if(center.Y < 30){
@@ -34,12 +45,16 @@ public class WaterBackground : GameObject{
         }else{
             green = 0;
         }
-        
+        background.Position = new Vector2f(-area.X/2 - 2*scale, -area.Y/2 - background.Texture.Size.Y*scale/2 + 200);
+        window.Draw(background);
         DrawUtils.DrawRect(new Color(0, green, (blue)), Water, window);
     }
-    public void getArea(Vector2f _area){
+    public void SetArea(Vector2f _area){
         area = _area;
         Water.Width = area.X;
         Water.Height = area.Y;
+
+        scale = area.X/ (background.Texture.Size.X-3) * 1.5f;
+        background.Scale*=scale;
     }
 }

@@ -26,6 +26,7 @@ public class AssetManager
 
         LoadTexture("Dock", "./Assets/Other/Dock.png");
         LoadTexture("Water", "./Assets/Other/wave.png");
+        LoadTexture("Background", "./Assets/Other/Background.png");
 
         LoadTexture("fish", "./Assets/FishSprites/Fish.png");
         LoadTexture("DriftFish", "./Assets/FishSprites/Soap.png");
@@ -36,8 +37,18 @@ public class AssetManager
 
         LoadTexture("Gradiant","./Assets/Other/gradient.png");
         LoadTexture("Bubbles","./Assets/FishSprites/Bubble.png");
+        LoadTexture("MoveEnabled", "./Assets/HudSprites/MoveDuration.png");
 
         LoadTexture("Mouse", "./Assets/HudSprites/Mouse.png");
+        LoadTexture("Button", "./Assets/HudSprites/Button.png");
+        LoadTexture("ShopBackground", "./Assets/HudSprites/ShopBox.png");
+        LoadTexture("Money", "./Assets/HudSprites/Money.png");
+        LoadTexture("UpgradeBar", "./Assets/HudSprites/UpgradeBar.png");
+        LoadTexture("UpgradeBait", "./Assets/HudSprites/UpgradeBait.png");
+        LoadTexture("UpgradeVision", "./Assets/HudSprites/UpgradeVision.png");
+        LoadTexture("UpgradeMove", "./Assets/HudSprites/UpgradeMove.png");
+
+        LoadTexture("InitialAnim", "./Assets/Other/InitAnim.png");
 
         LoadFont("PixelFont", "./Assets/Fonts/Pixeled.ttf");
     }

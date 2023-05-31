@@ -9,26 +9,33 @@ public class FishManager : Fish
     bool FishBool;
     float depth = 0;
     float maxBigCount = 3;
+    float SpawnRateParse;
+    bool FishCought = false;
+    Vector2f area;
     public override void Initialize()
     {
         FishList = new List<Fish>();
         maxBigCount = 3;
+        SpawnRateParse = ValueParser.ParseGameState(4);
     }
 
     public override void Update(float deltaTime, InputManager inputman)
     {
-        int n = random.Next(1, 10000);
-        if(n >9980-depth){
-            FishBool = true;
-        }else{
-            FishBool = false;
-        }
-        foreach(Fish fish in FishList){
-            fish.Update(deltaTime, inputman);
+        if(!FishCought){
+            int n = random.Next(1, 10000);
+            if(n >10000-depth-200/(SpawnRateParse*SpawnRateParse)){
+                FishBool = true;
+            }else{
+                FishBool = false;
+            }
+            foreach(Fish fish in FishList){
+                fish.Update(deltaTime, inputman);
+            }
         }
     }
 
-    public void SpawnFish(bool started, Vector2f area, Vector2f center){
+    public void SpawnFish(bool started, Vector2f _area, Vector2f center){
+        area = _area;
         if(started && FishBool){
             int FishNum = random.Next(1, 6);
             float spawnX = 0;
@@ -95,6 +102,7 @@ public class FishManager : Fish
         }
     }
 
+
     public override int ColisionCheck(FloatRect player)
     {
         foreach(Fish fish in FishList){
@@ -104,13 +112,23 @@ public class FishManager : Fish
         }
         return 0;
     }
+    public Fish CollisionTest(FloatRect player){
+        foreach(Fish fish in FishList){
+            if(fish.ColisionCheck(player) > 0){
+                Fish save = fish;
+                FishCought = true;
+                return save;
+            }
+        }
+        return null;  
+    }
 
     public override void MoveToGoal(Vector2f player)
     {
         foreach(Fish fish in FishList){
             fish.MoveToGoal(player);
         }
-        depth = player.Y /100;
+        depth = player.Y /40;
     }
     public override void SetPositon(Vector2f position)
     {
@@ -123,5 +141,15 @@ public class FishManager : Fish
     }
     public List<Fish> GetFish(){
         return FishList;
+    }
+        public override void SetRotation(Vector2f Rotationvec)
+    {
+        foreach (Fish fish in FishList){
+            fish.SetRotation(Rotationvec);
+        }
+    }
+    public override float GetScale()
+    {
+        return Utils.Distance(new Vector2f(area.X, 0), new Vector2f(0, area.Y));
     }
 }

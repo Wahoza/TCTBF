@@ -8,4 +8,6 @@ public abstract class Fish : GameObject{
     public abstract void MoveToGoal(Vector2f player);
     public abstract void SetPositon(Vector2f position);
     public abstract Vector2f GetPosition();
+    public abstract void SetRotation(Vector2f Rotationvec);
+    public abstract float GetScale();
 }

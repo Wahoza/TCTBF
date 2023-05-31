@@ -43,15 +43,19 @@ public class FishMouse : GameObject
                 sprite.TextureRect.Height
             );
 
-        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
-        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
+        CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, CollisionBox.Width, CollisionBox.Height);
         
     }
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
         window.Draw(sprite);
+        //DrawUtils.DrawRect(Color.Red, CollisionBox, window);
     }
     public void SetFishMouseArea(Vector2f _area){
         area = _area;
+    }
+    public FloatRect GetMouseRect(){
+        CollisionBox = new FloatRect(Mouse.GetPosition().X-area.X/2, Mouse.GetPosition().Y-area.Y/2, CollisionBox.Width, CollisionBox.Height);
+        return CollisionBox;
     }
 }

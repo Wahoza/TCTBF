@@ -7,5 +7,6 @@ public static class DrawUtils{
         rectangleShape.FillColor = color;
         rectangleShape.Position = new Vector2f(rect.Left, rect.Top);
         window.Draw(rectangleShape);
+        //Console.WriteLine(rect);
     }
 }
