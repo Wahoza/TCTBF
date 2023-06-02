@@ -16,13 +16,13 @@ public class NormalFish : Fish
     float FISH_TILING_Y = 1;
     float animationTime = 0;
     float animationSpeed = 5;
-
-    public override int ColisionCheck(FloatRect player)
+    float value = 0;
+    public override bool ColisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
-            return 2;
+            return true;
         }
-        return 0;
+        return false;
     }
 
     public override void Initialize()
@@ -104,6 +104,9 @@ public class NormalFish : Fish
     public override void SetPositon(Vector2f position)
     {
         sprite.Position = position;
+        if(value == 0){
+            value = 10 + scale + position.Y/10;
+        }
     }
 
     public override Vector2f GetPosition(){
@@ -116,5 +119,9 @@ public class NormalFish : Fish
     public override float GetScale()
     {
         return scale;
+    }
+    public override float GetValue()
+    {
+        return value;
     }
 }

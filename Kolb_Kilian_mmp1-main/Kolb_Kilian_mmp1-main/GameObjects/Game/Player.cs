@@ -49,8 +49,17 @@ public class Player : GameObject
     private Vector2f returnPoint;
 
     float MoveTimer;
+    float weight;
+
+    Sprite splash;
+    float splashAnimSpeed = 10;
+    float SPLASH_TILING_X = 5;
+    bool splashAnim = false;
+    float splashAnimTime = 0;
     public override void Initialize()
-    {
+    {   
+        weight = 500 * ((float)ValueParser.ParseGameState(6))/5 ;
+        
         move = new Vector2f(0, 0);
         CameraX = 0;
         CameramoveX = true;
@@ -70,6 +79,7 @@ public class Player : GameObject
             (int)(playerTexture.Size.X / PLAYER_TILING_X),
             (int)(playerTexture.Size.Y / PLAYER_TILING_Y)
         );
+
         textureSize = new Vector2f(sprite.Texture.Size.X/PLAYER_TILING_X, sprite.Texture.Size.Y/PLAYER_TILING_Y);
         sprite.Scale *= scale;
         Vector2f center = textureSize * 0.5f;
@@ -80,13 +90,26 @@ public class Player : GameObject
         qte.Initialize();
         qteActive = false;
 
-        MoveTimer = ValueParser.ParseGameState(2) * 15;
+        MoveTimer = ValueParser.ParseGameState(5) * 15;
 
         CoughtFish = null;
+
+        Texture SplashTexture = AssetManager.Instance.Textures["Splash"];
+        splash = new Sprite(SplashTexture);
+        splash.TextureRect = new IntRect(
+            1000, 0,
+            (int)(SplashTexture.Size.X/SPLASH_TILING_X),
+            (int)SplashTexture.Size.Y
+        );
+        splash.Origin = new Vector2f(splash.TextureRect.Width, splash.TextureRect.Height) /2;
+        splash.Scale *= 4;
+
+        sprite.Position = new Vector2f(0, 0);
     }
 
     public override void Update(float deltaTime, InputManager inputman)
     {
+        SplashUpdate(deltaTime);
         animationTime += deltaTime * animationSpeed;
         
         if(MoveStarted(inputman) && !collided){
@@ -110,10 +133,18 @@ public class Player : GameObject
             qteActive = false;
             if(completed[0]){
                 if(Utils.Distance(sprite.Position, returnPoint) > 20){
-                    sprite.Position += (returnPoint -sprite.Position).Normalize() * 1000 * deltaTime;
+                    sprite.Position += (returnPoint -sprite.Position).Normalize() * 500 * deltaTime;
                     currentAnimation = AnimationType.Down;
+
                 }else{
                     restart = true;
+
+                    if(CoughtFish != null){
+                        int value = (int)(CoughtFish.GetValue()*20);
+                        ValueParser.WriteGamestate(2, value);
+                    }else{
+                        ValueParser.WriteGamestate(2, 0);
+                    }
                 }
             }
         }
@@ -136,6 +167,7 @@ public class Player : GameObject
 
             CoughtFish.SetPositon(sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2);
             CoughtFish.SetRotation(GetHookPosition()-sprite.Position);
+
         }
         
 
@@ -195,10 +227,10 @@ public class Player : GameObject
             move += new Vector2f(0, 1) * dt * MoveScale * 0.6f;
         }
 
-        if(move.Y > 200 && sprite.Position.Y > 30){
-            move.Y = 200;
+        if(move.Y > weight  && sprite.Position.Y > 70){
+            move.Y = weight;
         }
-        if(sprite.Position.Y <= 0){
+        if(sprite.Position.Y <= 70){
             move += new Vector2f(0, 1) * dt * MoveScale * 10;
         }
         sprite.Position += move * dt;
@@ -218,6 +250,7 @@ public class Player : GameObject
 
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
+
         view = window.GetView();
         
         if(sprite.Position.Y <100 && CameramoveX){
@@ -234,14 +267,18 @@ public class Player : GameObject
         }
         window.SetView(view);
 
-        if(sprite.Position.Y <0 || !shaderon){
-            window.Draw(sprite);
-        }else{
-            window.Draw(sprite, states);
+        if(!(completed[1] && completed[0])){
+            if(sprite.Position.Y <0 || !shaderon){
+                window.Draw(sprite);
+            }else{
+                window.Draw(sprite, states);
+            }
         }
         if(collided && !completed[0]){
             qte.Draw(window, states, shaderon);
         }
+
+        window.Draw(splash);
     }
 
     public Vector2f GetPosition()
@@ -252,7 +289,7 @@ public class Player : GameObject
     {
         //if(!completed[0]){
             float EmptySpaceComp = 1.7f;
-            Vector2f pos = sprite.Position - (textureSize * scale / 2)/EmptySpaceComp;
+            Vector2f pos = sprite.Position - (textureSize * scale / 2)/EmptySpaceComp + new Vector2f(0, weight / 100);
             if(currentAnimation == AnimationType.Left){
                 return pos;
             }
@@ -280,5 +317,31 @@ public class Player : GameObject
     }
     public void SetCoughtFish(Fish fish){
         CoughtFish = fish;
+    }
+
+    private void SplashUpdate(float deltaTime){
+        if(sprite.Position.Y >= 25 && sprite.Position.Y <= 30 && !splashAnim){
+            splash.Position = sprite.Position;
+            splashAnim = true;
+        }
+        if(splashAnim){
+            splashAnimTime += deltaTime * splashAnimSpeed;
+            int SplashOffsetX = (int)(splashAnimTime % SPLASH_TILING_X);
+            splash.TextureRect = new IntRect(
+                SplashOffsetX * splash.TextureRect.Width, 0,
+                splash.TextureRect.Width,
+                splash.TextureRect.Height
+            );
+
+            if(SplashOffsetX >= SPLASH_TILING_X -1 || splash.Position.Y <20){
+                splashAnim = false;
+                splashAnimTime = 0;
+                splash.TextureRect = new IntRect(
+                (int)SPLASH_TILING_X * splash.TextureRect.Width, 0,
+                splash.TextureRect.Width,
+                splash.TextureRect.Height
+            );
+            }
+        }
     }
 }

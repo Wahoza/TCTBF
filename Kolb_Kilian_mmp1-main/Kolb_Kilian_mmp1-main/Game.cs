@@ -75,8 +75,9 @@ public class Game
                     if(op.GetFinished()){
 
                         gameState = GameState.FishingPhase;
+                        ValueParser.WriteGamestate(0, (int)gameState);
                         GameInitialize();
-                        Update(deltaTime);
+                        break;
                     }
                 }
             }
@@ -131,9 +132,10 @@ public class Game
             
         }else{
     
-            if(ValueParser.ParseGameState(1)>10000){
+            if(ValueParser.ParseGameState(1)>10000000){
                 gameState = GameState.FinishPhase;
-            }else{
+                EndInitialize();
+            }else if(gameState != GameState.ShoppigPhase){
                 gameState = GameState.ShoppigPhase;
                 ShopInitialize();
             }
@@ -144,8 +146,8 @@ public class Game
 
         }else if(gameState == GameState.ShoppigPhase){
                 foreach(GameObject gameObject in shopObjects){
-                    if(gameObject is ShopHud shop){
-                        shop.UpdatePointer(fishMouse.GetMouseRect());
+                    if(gameObject is Vendor shop){
+                        shop.getMousePosition(fishMouse.GetMouseRect());
                     }
                     gameObject.Update(deltaTime, InputManager.Instance);
                 }
@@ -158,17 +160,9 @@ public class Game
         window.Clear(Color.Blue);
         RenderStates states = wave.GetRenderStates();
 
-        if(gameState == GameState.FishingPhase){
-            foreach (GameObject gameObject in gameObjects)
-            {
-                gameObject.Draw(window, states, false);
-            }
-            //waveEffect.Draw(window, RenderStates.Default);
-        }else if (gameState == GameState.ShoppigPhase){
-           foreach (GameObject gameObject in shopObjects)
-            {
-                gameObject.Draw(window, states, false);
-            } 
+        foreach (GameObject gameObject in gameObjects)
+        {
+            gameObject.Draw(window, states, false);
         }
 
         window.Display();
@@ -196,8 +190,10 @@ public class Game
         gameState = (GameState)ValueParser.ParseGameState(0);
         if(gameState == GameState.FirstLoad){
             FirstInitialize();
-        }else{
+        }else if(gameState == GameState.FishingPhase){
             GameInitialize();
+        }else if(gameState == GameState.ShoppigPhase){
+            ShopInitialize();
         }
     }
     private void GameInitialize()
@@ -214,6 +210,11 @@ public class Game
         waterBackground.Initialize();
         waterBackground.SetArea(view.Size);
         gameObjects.Add(waterBackground);
+
+        Vendor vendor = new Vendor();
+        vendor.Initialize();
+        vendor.setShopingPhase(false);
+        gameObjects.Add(vendor);
 
         WaterwDock water = new WaterwDock();
         water.Initialize();
@@ -243,6 +244,7 @@ public class Game
         Turtle turtle = new Turtle();
         turtle.Initialize();
         turtle.SetPositon(new Vector2f(0, -40));
+        turtle.SetEndPoint(player.GetHookPosition());
         gameObjects.Add(turtle);
 
         Hud hud = new Hud();
@@ -250,11 +252,12 @@ public class Game
         gameObjects.Add(hud);
 
         qteActive = false;
+
     }
 
     private void ShopInitialize(){
+        
         gameObjects.Clear();
-        shopObjects.Clear();
         
         View view = new View(new Vector2f(), (Vector2f)window.Size);
         window.SetFramerateLimit(120);
@@ -263,28 +266,34 @@ public class Game
         WaterBackground waterBackground = new WaterBackground();
         waterBackground.Initialize();
         waterBackground.SetArea(view.Size);
-        shopObjects.Add(waterBackground);
+        gameObjects.Add(waterBackground);
+
+        Vendor vendor = new Vendor();
+        vendor.Initialize();
+        vendor.setShopingPhase(true);
+        gameObjects.Add(vendor);
 
         WaterwDock water = new WaterwDock();
         water.Initialize();
-        shopObjects.Add(water);
+        gameObjects.Add(water);
 
         player.Initialize();
-        shopObjects.Add(player);
-
+        gameObjects.Add(player);
+        
         Turtle turtle = new Turtle();
         turtle.Initialize();
         turtle.SetPositon(new Vector2f(0, -40));
         turtle.SetEndPoint(player.GetHookPosition());
-        shopObjects.Add(turtle);
-
-        ShopHud shop = new ShopHud();
-        shop.Initialize();
-        shopObjects.Add(shop);
+        gameObjects.Add(turtle);
+        
+        MoneyGet moneyGet = new MoneyGet();
+        moneyGet.Initialize();
+        moneyGet.SetPosition((player.GetHookPosition() + new Vector2f(100 , 0)));
+        gameObjects.Add(moneyGet);
 
         fishMouse.Initialize();
         fishMouse.SetFishMouseArea(view.Size);
-        shopObjects.Add(fishMouse);
+        gameObjects.Add(fishMouse);
     }
     private void FirstInitialize(){
         View view = new View(new Vector2f(), (Vector2f)window.Size);
@@ -297,5 +306,20 @@ public class Game
 
         gameObjects.Add(op);
     }
+
+    private void EndInitialize(){
+        gameObjects.Clear();
+
+        View view = new View(new Vector2f(), (Vector2f)window.Size);
+        window.SetView(view);
+        window.SetFramerateLimit(120);
+
+        Ending end = new ();
+        end.Initialize();
+        end.SetArea(view.Size);
+
+        gameObjects.Add(end);
+    }
+    
 
 }

@@ -46,7 +46,13 @@ public class WaterBackground : GameObject{
             green = 0;
         }
         background.Position = new Vector2f(-area.X/2 - 2*scale, -area.Y/2 - background.Texture.Size.Y*scale/2 + 200);
-        window.Draw(background);
+
+        for (int i = -1; i <= 1; i++){
+            background.Position = new Vector2f(0 + background.Scale.X * (background.Texture.Size.X-3)*i, -370);
+            window.Draw(background);
+        }
+        
+
         DrawUtils.DrawRect(new Color(0, green, (blue)), Water, window);
     }
     public void SetArea(Vector2f _area){
@@ -54,7 +60,9 @@ public class WaterBackground : GameObject{
         Water.Width = area.X;
         Water.Height = area.Y;
 
-        scale = area.X/ (background.Texture.Size.X-3) * 1.5f;
+        scale = area.X/ (background.Texture.Size.X-10) * 1.5f;
         background.Scale*=scale;
+        background.Origin = (Vector2f)background.Texture.Size / 2;
+        background.Position = new Vector2f(0, -200);
     }
 }

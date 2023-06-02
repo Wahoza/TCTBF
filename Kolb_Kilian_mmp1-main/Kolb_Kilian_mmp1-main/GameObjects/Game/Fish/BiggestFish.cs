@@ -21,6 +21,8 @@ public class BiggestFish : Fish
     
     float RotationNum = 0;
 
+    float value;
+
     public override void Initialize()
     {
 
@@ -144,17 +146,18 @@ public class BiggestFish : Fish
     public override void SetPositon(Vector2f position)
     {
         FishItems[0] = position;
+        value = 100000000;
     }
     public override Vector2f GetPosition()
     {
         return FishItems[0];
     }
-    public override int ColisionCheck(FloatRect player)
+    public override bool ColisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
-            return 1000000;
+            return true;
         }
-        return 0;
+        return false;
     }
 
     public override void SetRotation(Vector2f Rotationvec)
@@ -164,5 +167,9 @@ public class BiggestFish : Fish
     public override float GetScale()
     {
         return scale;
+    }
+    public override float GetValue()
+    {
+        return value;
     }
 }

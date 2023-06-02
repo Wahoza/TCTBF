@@ -19,12 +19,13 @@ public class DriftFish : Fish
     float FISH_TILING_Y = 1;
     float animationTime = 0;
     float animationSpeed = 10;
-    public override int ColisionCheck(FloatRect player)
+    float value = 0;
+    public override bool ColisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
 
     public override void Initialize()
@@ -90,6 +91,10 @@ public class DriftFish : Fish
         sprite.Position = position;
         CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
+        
+        if(value == 0){
+            value = 2 + scale + position.Y/20;
+        }
     }
     private void CalculateMovevec(float deltaTime){
         if(((Utils.AngleBetween(movevec, TargetPosition-sprite.Position) > 0.1) && initialFind)|| passedtime >wait * 100){
@@ -126,5 +131,9 @@ public class DriftFish : Fish
     public override float GetScale()
     {
         return scale;
+    }
+    public override float GetValue()
+    {
+        return value;
     }
 }

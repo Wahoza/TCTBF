@@ -6,7 +6,7 @@ public class ShopItem
 {
     Sprite background;
     Sprite icon;
-    Button button;
+    ShopButton button;
     ShopBar bar;
     float scale = 10;
     int InitialCost;
@@ -18,7 +18,7 @@ public class ShopItem
         background.Origin = (Vector2f)background.Texture.Size/2;
         background.Scale *= scale;
 
-        button = new Button();
+        button = new ShopButton();
         button.Initialize();
         button.SetParseLocation(_ParseLocation);
 
@@ -54,7 +54,9 @@ public class ShopItem
         background.Position = pos;
         bar.SetPosition(pos);
         button.SetPosition(pos + new Vector2f(0, 1) * scale *6);
-        icon.Position = pos + new Vector2f(0, -1) * scale *4;
+        icon.Position = pos + new Vector2f(0, -1) * scale *8;
     }
-    
+    public float GetScaleX(){
+        return scale * background.Texture.Size.X;
+    }
 }

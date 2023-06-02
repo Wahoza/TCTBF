@@ -1,34 +1,34 @@
-//This Fish will Lock Target once and move quickly in that direction
+//This Fish will move in bursts twoards the hook
 using SFML.Graphics;
 using SFML.System;
 
-public class BulletFish : Fish
+public class SquidFish : Fish
 {
     private Sprite sprite;
     private bool locked = false;
     private Vector2f movevec;
     FloatRect CollisionBox;
-    private float scale = 6;
-    private float hitboxscale = 0.6f;
+    private float scale = 3;
+    private float hitboxscale = 0.5f;
+    float resetmovevectime;
+    float speed;
     Vector2f textureSize;
-    float wait = 1;
-    float speed = 2;
-    float FISH_TILING_X = 4;
-    float FISH_TILING_Y = 1;
     float animationTime = 0;
-    float animationSpeed = 4;
-
-    public override int ColisionCheck(FloatRect player)
+    float animationSpeed = 2;
+    float FISH_TILING_X = 2;
+    float FISH_TILING_Y = 1;
+    float value = 0;
+    public override bool ColisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
-            return 2;
+            return true;
         }
-        return 0;
+        return false;
     }
 
     public override void Initialize()
     {
-        Texture texture =  AssetManager.Instance.Textures["BulletFish"];
+        Texture texture =  AssetManager.Instance.Textures["SquidFish"];
         sprite = new Sprite(texture);
         textureSize = (Vector2f)texture.Size;
             sprite.TextureRect = new IntRect(
@@ -40,62 +40,51 @@ public class BulletFish : Fish
 
         Random random = new Random();
         scale =  random.Next(40, 60)/10;
-        speed = 100/scale;
+        speed = 400/scale;
         sprite.Scale *= scale;
 
         Vector2f center = textureSize * 0.5f;
         sprite.Origin = center;
         CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y*scale * hitboxscale);
+        CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y *scale * hitboxscale);
+    
     }
 
     public override void MoveToGoal(Vector2f player)
     {
         if(!locked){
-            if(Utils.Distance(player, sprite.Position) <= 400){
-                movevec = Utils.Normalize(player-sprite.Position);
-                locked = true;
-            }else{
-                movevec = Utils.Normalize(player-sprite.Position);
-            }
+            movevec = Utils.Normalize(player-sprite.Position);
+            locked = true;
+            resetmovevectime = 2;
         }
     }
 
     public override void Update(float deltaTime, InputManager inputman)
     {
-
-        if(locked && wait>0)
-        { 
-            wait -= deltaTime;
+        if(resetmovevectime > 0){
+            sprite.Position += movevec * deltaTime * resetmovevectime * speed;
+            resetmovevectime -= deltaTime;
             animationTime += deltaTime * animationSpeed;
-            int animationFrame = (int)animationTime % 4;
+            int animationFrame = (int)animationTime % 2;
             int spriteOffsetX = animationFrame * sprite.TextureRect.Width;
             sprite.TextureRect = new IntRect(
-                spriteOffsetX,
-                0,
-                sprite.TextureRect.Width,
-                sprite.TextureRect.Height
-            );
-        } 
-        else if (!locked){
-            movevec.Y = 0;
-            sprite.Position += new Vector2f(movevec.Normalize().X *deltaTime * 100, 0);
+            spriteOffsetX,
+            0,
+            sprite.TextureRect.Width,
+            sprite.TextureRect.Height
+        );
         }else{
-            sprite.Position += movevec * speed * deltaTime;
-            speed = 1000;
-        }
-        if(sprite.Position.Y< 100){
-            SetPositon(new Vector2f(sprite.Position.X, 100));
-        }
-        if(Utils.Angle(movevec) >= Math.PI){
-            sprite.Scale = new Vector2f(scale, -scale);
+            locked = false;
         }
 
         sprite.Rotation = Utils.Angle(movevec) *  360 /2 /(float)Math.PI;
-        
         CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
-    }
 
+        if(sprite.Position.Y<  100){
+                SetPositon(new Vector2f(sprite.Position.X, 100));
+        }
+    }
 
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
@@ -105,14 +94,18 @@ public class BulletFish : Fish
             window.Draw(sprite);
         }
     }
+
     public override void SetPositon(Vector2f position)
     {
         sprite.Position = position;
         CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
+
+        if(value == 0){
+            value = 2 + scale + position.Y/20;
+        }
     }
-    public override Vector2f GetPosition()
-    {
+    public override Vector2f GetPosition(){
         return sprite.Position;
     }
     public override void SetRotation(Vector2f Rotationvec)
@@ -122,5 +115,10 @@ public class BulletFish : Fish
     public override float GetScale()
     {
         return scale;
+        
+    }
+    public override float GetValue()
+    {
+        return value;
     }
 }

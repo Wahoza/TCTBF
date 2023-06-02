@@ -2,7 +2,7 @@ using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
-public class Button : GameObject
+public class ShopButton : GameObject
 {
     Sprite sprite;
     int BUTTON_TILING_X = 3;
@@ -49,7 +49,7 @@ public class Button : GameObject
     }
     public void ButtonClick(FloatRect mouse)
     {   
-        if(ValueParser.ParseGameState(1) < value || ValueParser.ParseGameState(ParseLocation) == 6){
+        if(ValueParser.ParseGameState(1)/100 < value || ValueParser.ParseGameState(ParseLocation) == 6){
             status = ButtonStatus.unavadible;
         }else{
             status = ButtonStatus.normal;
@@ -66,7 +66,7 @@ public class Button : GameObject
 
                 if(InputManager.Instance.GetMouseUp(Mouse.Button.Left)){
                    ValueParser.WriteGamestate(ParseLocation, ValueParser.ParseGameState(ParseLocation) + 1);
-                   ValueParser.WriteGamestate(1, ValueParser.ParseGameState(1) - value);
+                   ValueParser.WriteGamestate(1, ValueParser.ParseGameState(1) - value*100);
                    
                 }
             }

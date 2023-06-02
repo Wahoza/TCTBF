@@ -64,7 +64,7 @@ public class Turtle : GameObject
         lineVisible = false;
 
         startPoint = new Vector2f(turtleTexture.Size.X/TURTLE_TILING_X * scale, turtleTexture.Size.Y / TURTLE_TILING_Y * scale + 0.2f);
-        endPoint = new Vector2f(700, 300);
+        endPoint = startPoint;
         controlPoint = new Vector2f(400, 100);
 
         for (int i = 0; i <= NumPoints; i++)

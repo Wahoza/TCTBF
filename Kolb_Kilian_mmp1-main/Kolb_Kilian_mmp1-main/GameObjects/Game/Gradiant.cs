@@ -42,8 +42,13 @@ public class Gradiant : GameObject
         gradiant.Position = hook;
     }
     public void SetStats(Vector2f _area){
-        intensity = 75/ValueParser.ParseGameState(3);
-        area = _area;
+        if(ValueParser.ParseGameState(3) != 0){
+            intensity = 50/ValueParser.ParseGameState(3);
+            area = _area;
+        }else{
+            intensity = 75;
+        }
+
     }
 
 }

@@ -10,27 +10,32 @@ public class ShopHud : GameObject
     MoneyHud moneyHud = new();
     public override void Initialize()
     {
-        ShopItem TimeUpgrade = new ShopItem();
-        TimeUpgrade.Initialize("UpgradeMove", 7, 2);
-        ShopSlots.Add(TimeUpgrade);
-
+        ShopItem VisionUpgrade = new ShopItem();
+        VisionUpgrade.Initialize("UpgradeVision", 5, 3);
+        ShopSlots.Add(VisionUpgrade);
+        
         ShopItem BaitUpgrade = new ShopItem();
         BaitUpgrade.Initialize("UpgradeBait", 10, 4);
         ShopSlots.Add(BaitUpgrade);
 
-        ShopItem VisionUpgrade = new ShopItem();
-        VisionUpgrade.Initialize("UpgradeVision", 5, 3);
-        ShopSlots.Add(VisionUpgrade);
+        ShopItem TimeUpgrade = new ShopItem();
+        TimeUpgrade.Initialize("UpgradeMove", 7, 5);
+        ShopSlots.Add(TimeUpgrade);
+
+        //makes game lag
+        ShopItem WeightUpgrade = new ShopItem();
+        WeightUpgrade.Initialize("UpgradeWeight", 6, 6);
+        ShopSlots.Add(WeightUpgrade);
 
         moneyHud.Initialize();
 
-        float PositionX = -700;
+        float PositionX = -850;
         float PositionY = -200;
-        moneyHud.SetPosition(new Vector2f(PositionX, PositionY -200));
+        moneyHud.SetPosition(new Vector2f(PositionX, PositionY -150));
 
         foreach(ShopItem item in ShopSlots){
             item.SetPositon(new SFML.System.Vector2f(PositionX, PositionY));
-            PositionX += 200;
+            PositionX += 185;
         }
     }
 

@@ -23,6 +23,7 @@ public class AssetManager
         LoadTexture("hookwbait", "./Assets/FishSprites/hookwbait.png");
         LoadTexture("lineEnd", "./Assets/Other/line-end.png");
         LoadTexture("turtle", "./Assets/Other/startFish.png");
+        LoadTexture("shop", "./Assets/HudSprites/Shop.png");
 
         LoadTexture("Dock", "./Assets/Other/Dock.png");
         LoadTexture("Water", "./Assets/Other/wave.png");
@@ -37,6 +38,7 @@ public class AssetManager
 
         LoadTexture("Gradiant","./Assets/Other/gradient.png");
         LoadTexture("Bubbles","./Assets/FishSprites/Bubble.png");
+        LoadTexture("Splash","./Assets/Other/Splash.png");
         LoadTexture("MoveEnabled", "./Assets/HudSprites/MoveDuration.png");
 
         LoadTexture("Mouse", "./Assets/HudSprites/Mouse.png");
@@ -46,9 +48,18 @@ public class AssetManager
         LoadTexture("UpgradeBar", "./Assets/HudSprites/UpgradeBar.png");
         LoadTexture("UpgradeBait", "./Assets/HudSprites/UpgradeBait.png");
         LoadTexture("UpgradeVision", "./Assets/HudSprites/UpgradeVision.png");
+        LoadTexture("UpgradeWeight", "./Assets/HudSprites/UpgradeWeight.png");
         LoadTexture("UpgradeMove", "./Assets/HudSprites/UpgradeMove.png");
+        LoadTexture("Information", "./Assets/HudSprites/information.png");
+
+        LoadTexture("ShopButton", "./Assets/HudSprites/Shopbutton.png");
+        LoadTexture("InfoButton", "./Assets/HudSprites/Informationbutton.png");
+        LoadTexture("CloseButton", "./Assets/HudSprites/exit.png");
+        LoadTexture("MusicButton", "./Assets/HudSprites/Music.png");
+        LoadTexture("SoundButton", "./Assets/HudSprites/Sound.png");
 
         LoadTexture("InitialAnim", "./Assets/Other/InitAnim.png");
+        LoadTexture("EndScreen", "./Assets/Other/Victory.png");
 
         LoadFont("PixelFont", "./Assets/Fonts/Pixeled.ttf");
     }

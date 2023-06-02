@@ -41,13 +41,13 @@ public class FishManager : Fish
             float spawnX = 0;
             float spawnY = 0;
             if(random.Next(1,3)%2 == 0){
-                spawnX = center.X - area.X/2 + random.Next(1,3) % 2 * area.X;
+                spawnX = center.X - (area.X +40)/2 + random.Next(1,3) % 2 * (area.X +40);
                 spawnY = center.Y + random.Next(-(int)area.Y/2, (int)area.Y/2); 
             }else{
                 if (center.Y + area.Y/2 > 0){
-                    spawnY = center.Y - area.Y/2 + area.Y;
+                    spawnY = center.Y - (area.Y)/2 + (area.Y);
                 }else{
-                    spawnY = center.Y - area.Y/2 + random.Next(1,3) % 2 * area.Y;
+                    spawnY = center.Y - (area.Y)/2 + random.Next(1,3) % 2 * (area.Y + 40);
                 }
                 spawnX = center.X + random.Next(-(int)area.X/2, (int)area.X/2);
             }
@@ -82,7 +82,7 @@ public class FishManager : Fish
                 FishList.Add(DriftFish);
                 break;
             case 5:
-            if(maxBigCount >0 && depth > 0){
+            if(maxBigCount >0 && depth > 250){
                 maxBigCount--;
                 BiggestFish BiggestFish = new BiggestFish();
                 BiggestFish.Initialize();
@@ -103,18 +103,18 @@ public class FishManager : Fish
     }
 
 
-    public override int ColisionCheck(FloatRect player)
+    public override bool ColisionCheck(FloatRect player)
     {
         foreach(Fish fish in FishList){
-            if(fish.ColisionCheck(player) > 0){
+            if(fish.ColisionCheck(player)){
                 return fish.ColisionCheck(player);
             }
         }
-        return 0;
+        return false;
     }
     public Fish CollisionTest(FloatRect player){
         foreach(Fish fish in FishList){
-            if(fish.ColisionCheck(player) > 0){
+            if(fish.ColisionCheck(player)){
                 Fish save = fish;
                 FishCought = true;
                 return save;
@@ -151,5 +151,13 @@ public class FishManager : Fish
     public override float GetScale()
     {
         return Utils.Distance(new Vector2f(area.X, 0), new Vector2f(0, area.Y));
+    }
+    public override float GetValue()
+    {
+        float value = 0;
+        foreach(Fish fish in FishList){
+            value += fish.GetValue();
+        }
+        return value;
     }
 }

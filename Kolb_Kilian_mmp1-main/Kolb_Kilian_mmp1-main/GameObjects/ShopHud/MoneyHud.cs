@@ -26,7 +26,7 @@ public class MoneyHud : GameObject
 
     public override void Update(float deltaTime, InputManager inputman)
     {
-        MoneyText.DisplayedString = "" + ValueParser.ParseGameState(1);
+        MoneyText.DisplayedString = "" + ValueParser.ParseGameState(1)/100;
     }
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
@@ -35,6 +35,6 @@ public class MoneyHud : GameObject
     }
     public void SetPosition(Vector2f pos){
         icon.Position = pos;
-        MoneyText.Position = pos+new Vector2f(1, 0) * icon.Texture.Size.X;
+        MoneyText.Position = pos+new Vector2f(1, 0) * (icon.Texture.Size.X * iconscale/2);
     }
 }
