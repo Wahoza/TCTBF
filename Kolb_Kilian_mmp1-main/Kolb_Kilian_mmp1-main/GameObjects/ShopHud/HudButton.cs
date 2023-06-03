@@ -57,6 +57,7 @@ public class HudButton
 
                 if(InputManager.Instance.GetMouseUp(Mouse.Button.Left)){
                    pressed = true;
+                   PlaySound();
                 }
             }      
     }
@@ -65,6 +66,14 @@ public class HudButton
     }
     public void Draw(RenderWindow window){
         window.Draw(buttonSprite);
+    }
+    private void PlaySound()
+    {
+        if(ValueParser.ParseSettings(1) == 1){
+            SoundBuffer buffer = AssetManager.Instance.SoundBuffers["Click"];
+            Sound sound  = new(buffer);
+            sound.Play();
+        }
     }
 
 }

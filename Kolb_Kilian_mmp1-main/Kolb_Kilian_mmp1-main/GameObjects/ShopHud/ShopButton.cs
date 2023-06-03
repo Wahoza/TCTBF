@@ -67,7 +67,7 @@ public class ShopButton : GameObject
                 if(InputManager.Instance.GetMouseUp(Mouse.Button.Left)){
                    ValueParser.WriteGamestate(ParseLocation, ValueParser.ParseGameState(ParseLocation) + 1);
                    ValueParser.WriteGamestate(1, ValueParser.ParseGameState(1) - value*100);
-                   
+                   PlaySound();
                 }
             }
             else{
@@ -116,5 +116,13 @@ public class ShopButton : GameObject
     }
     public void SetMousePos(FloatRect _MousePos){
         MousePos = _MousePos;
+    }
+    private void PlaySound()
+    {
+        if(ValueParser.ParseSettings(1) == 1){
+            SoundBuffer buffer = AssetManager.Instance.SoundBuffers["Click"];
+            Sound sound  = new(buffer);
+            sound.Play();
+        }
     }
 }

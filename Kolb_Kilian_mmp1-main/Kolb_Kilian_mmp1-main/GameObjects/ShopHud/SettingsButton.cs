@@ -62,10 +62,11 @@ public class SettingsButton
                    pressed = !pressed;
                    
                    if(pressed){
-                    ValueParser.WriteSettings(parseLocation, 1);
+                        ValueParser.WriteSettings(parseLocation, 1);
                    }else{
-                    ValueParser.WriteSettings(parseLocation, 0);
+                        ValueParser.WriteSettings(parseLocation, 0);
                    }
+                   PlaySound();
                 }
             }      
     }
@@ -74,5 +75,13 @@ public class SettingsButton
     }
     public void Draw(RenderWindow window){
         window.Draw(buttonSprite);
+    }
+    private void PlaySound()
+    {
+        if(ValueParser.ParseSettings(1) == 1){
+            SoundBuffer buffer = AssetManager.Instance.SoundBuffers["Click"];
+            Sound sound  = new(buffer);
+            sound.Play();
+        }
     }
 }

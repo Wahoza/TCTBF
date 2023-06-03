@@ -22,6 +22,11 @@ public static class ValueParser
         Write(filePath, location, value);
     }
 
+    public static void ResetGameState(){
+        string filePath = "Utils/ParsedData/ParsedGame.txt";
+        string[] resetvalues = {"0","0","0","1","1","1","1"};
+        File.WriteAllLines(filePath, resetvalues);
+    }
     public static int ParseSettings(int location){
         //line Position: 0 == Music State
         //               1 == Sound State

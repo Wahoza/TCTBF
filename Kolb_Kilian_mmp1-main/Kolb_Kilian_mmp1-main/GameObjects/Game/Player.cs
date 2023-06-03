@@ -116,10 +116,15 @@ public class Player : GameObject
             Move(deltaTime, inputman);
 
         }else if (!completed[0] && collided){
+            if(collided && !qteActive){
+                PlaySound("Bite");
+            }
+            
             qteActive = true;
             qte.SetPositon(sprite.Position);
             qte.Update(deltaTime, inputman);
             currentAnimation = AnimationType.Down;
+
             if(qte.GetStatus() == 0){
                 completed = new bool[] {true, false};  
                 CoughtFish = null;
@@ -323,6 +328,10 @@ public class Player : GameObject
         if(sprite.Position.Y >= 25 && sprite.Position.Y <= 30 && !splashAnim){
             splash.Position = sprite.Position;
             splashAnim = true;
+            if(!completed[0]){
+                PlaySound("Splash");
+            }
+            
         }
         if(splashAnim){
             splashAnimTime += deltaTime * splashAnimSpeed;
@@ -344,4 +353,13 @@ public class Player : GameObject
             }
         }
     }
+
+    private void PlaySound(string SoundName){
+        if(ValueParser.ParseSettings(1) != 0){
+            SoundBuffer buffer  = AssetManager.Instance.SoundBuffers[SoundName];
+            Sound sound = new(buffer);
+            sound.Play();
+        }
+    }
+
 }

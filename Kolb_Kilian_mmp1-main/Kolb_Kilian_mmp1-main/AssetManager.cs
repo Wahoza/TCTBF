@@ -61,6 +61,16 @@ public class AssetManager
         LoadTexture("InitialAnim", "./Assets/Other/InitAnim.png");
         LoadTexture("EndScreen", "./Assets/Other/Victory.png");
 
+        LoadSoundBuffer("Bite", "./Assets/Sound/bite.wav");
+        LoadSoundBuffer("Click", "./Assets/Sound/click.wav");
+        LoadSoundBuffer("Splash", "./Assets/Sound/hookinwater.wav");
+        LoadSoundBuffer("Coin", "./Assets/Sound/coin.wav");
+        LoadSoundBuffer("CastLine", "./Assets/Sound/fish.wav");
+
+        LoadMusic("AboveWater", "./Assets/Music/AboveWater.ogg");
+        LoadMusic("UnderWater", "./Assets/Music/UnderWater.ogg");
+        LoadMusic("Victory", "./Assets/Music/Victory.ogg");
+        
         LoadFont("PixelFont", "./Assets/Fonts/Pixeled.ttf");
     }
 

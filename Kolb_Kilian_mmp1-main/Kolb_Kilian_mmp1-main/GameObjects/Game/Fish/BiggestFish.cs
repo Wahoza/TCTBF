@@ -76,6 +76,15 @@ public class BiggestFish : Fish
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
         if(shaderon == true){
+            if(printer.TextureRect.Left == 0){
+                printer.TextureRect=
+                    new IntRect(
+                        printer.TextureRect.Width * 5,
+                        0,
+                        printer.TextureRect.Width,
+                        printer.TextureRect.Height
+                );
+            }
             for(int element = FishItems.Count()-1; element > 0; element--){
                 printer.Position = FishItems[element];
                 printer.Rotation = Utils.Angle(FishItems[element-1]-FishItems[element]) *  360 /2 /(float)Math.PI;
@@ -105,6 +114,15 @@ public class BiggestFish : Fish
 
 
         }else{
+            if(printer.TextureRect.Left == 0){
+                printer.TextureRect=
+                    new IntRect(
+                        printer.TextureRect.Width * 5,
+                        0,
+                        printer.TextureRect.Width,
+                        printer.TextureRect.Height
+                );
+            }
             for(int element = FishItems.Count()-1; element > 0; element--){
                 printer.Position = FishItems[element];
                 if(element == FishItems.Count()-1){

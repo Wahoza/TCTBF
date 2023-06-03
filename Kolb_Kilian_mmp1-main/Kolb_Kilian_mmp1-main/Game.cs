@@ -13,8 +13,14 @@ public class Game
     Player player;
     FishMouse fishMouse;
     waveShader wave;
-    int coll = 0;
     bool qteActive; 
+
+    Music AboveWaterMusic;
+    Music UnderWaterMusic;
+    Music VictoryMusic;
+    int[] LastParsedMusicState = new int[3]{0, 0, 0};
+    
+    
     enum GameState{
         FirstLoad = 0,
         FishingPhase = 1,
@@ -74,7 +80,7 @@ public class Game
 
                     if(op.GetFinished()){
 
-                        gameState = GameState.FishingPhase;
+                        gameState = GameState.ShoppigPhase;
                         ValueParser.WriteGamestate(0, (int)gameState);
                         GameInitialize();
                         break;
@@ -132,10 +138,14 @@ public class Game
             
         }else{
     
-            if(ValueParser.ParseGameState(1)>10000000){
+            if(ValueParser.ParseGameState(2)>10000000){
                 gameState = GameState.FinishPhase;
+
                 EndInitialize();
-            }else if(gameState != GameState.ShoppigPhase){
+                ValueParser.ResetGameState();
+
+
+            }else if(gameState != GameState.ShoppigPhase&& gameState != GameState.FinishPhase){
                 gameState = GameState.ShoppigPhase;
                 ShopInitialize();
             }
@@ -145,13 +155,19 @@ public class Game
             GameInitialize();
 
         }else if(gameState == GameState.ShoppigPhase){
-                foreach(GameObject gameObject in shopObjects){
+                foreach(GameObject gameObject in gameObjects){
+                    
                     if(gameObject is Vendor shop){
                         shop.getMousePosition(fishMouse.GetMouseRect());
                     }
+
                     gameObject.Update(deltaTime, InputManager.Instance);
                 }
         }
+
+        
+        HandleMusic();
+
         InputManager.Instance.Update(deltaTime);
     }
 
@@ -166,6 +182,56 @@ public class Game
         }
 
         window.Display();
+    }
+
+    private void HandleMusic(){
+        if(gameState != GameState.FinishPhase){
+        LastParsedMusicState[1] = LastParsedMusicState[0];
+        LastParsedMusicState[0] = ValueParser.ParseSettings(0);
+
+        float Height = window.GetView().Center.Y;
+
+        if(Height > 30 && LastParsedMusicState[2] == 0){
+            LastParsedMusicState[2] = 1;
+            if(LastParsedMusicState[0] == 1){
+                    AboveWaterMusic.Pause();
+
+                    UnderWaterMusic.PlayingOffset = AboveWaterMusic.PlayingOffset;
+                    UnderWaterMusic.Play();
+                    UnderWaterMusic.Loop = true;
+            }
+
+        }else if (Height <= 30 && LastParsedMusicState[2] == 1){
+            LastParsedMusicState[2] = 0;
+
+            if(LastParsedMusicState[0] == 1){
+                UnderWaterMusic.Pause();
+                AboveWaterMusic.PlayingOffset = UnderWaterMusic.PlayingOffset;
+                AboveWaterMusic.Play();
+                AboveWaterMusic.Loop = true;
+            }
+        }
+
+        if(LastParsedMusicState[0] != LastParsedMusicState[1]){
+            if(LastParsedMusicState[0] == 1){
+                AboveWaterMusic.Play();
+                AboveWaterMusic.Loop = true;
+            }else{
+                AboveWaterMusic.Pause();
+                UnderWaterMusic.Pause();
+            }
+        }
+
+        if((Math.Sqrt(Math.Abs(Height-29))/30 >1)){
+            UnderWaterMusic.Volume = (int)(100 / (Math.Sqrt(Math.Abs(Height-29)) /30));
+        }
+
+        }else{
+            if(LastParsedMusicState[2] != 2 && ValueParser.ParseSettings(0) == 1 ){
+                LastParsedMusicState[2] = 2;
+                VictoryMusic.Play();
+            }
+        }
     }
 
     private void HandleEvents()
@@ -183,9 +249,17 @@ public class Game
 
         player = new Player();
         fishMouse = new FishMouse();
+
         wave = new waveShader();
         wave.Initialize(window.GetView().Size);
         Shaders.Add(wave);
+
+        AboveWaterMusic = AssetManager.Instance.Musics["AboveWater"];
+        UnderWaterMusic = AssetManager.Instance.Musics["UnderWater"];
+        VictoryMusic = AssetManager.Instance.Musics["Victory"];
+
+        AboveWaterMusic.Loop = true;
+        UnderWaterMusic.Loop = true;
 
         gameState = (GameState)ValueParser.ParseGameState(0);
         if(gameState == GameState.FirstLoad){
@@ -198,7 +272,6 @@ public class Game
     }
     private void GameInitialize()
     {
-        coll = 0;
         shopObjects.Clear();
         gameObjects.Clear();
 
@@ -309,6 +382,9 @@ public class Game
 
     private void EndInitialize(){
         gameObjects.Clear();
+
+        AboveWaterMusic.Stop();
+        UnderWaterMusic.Stop();
 
         View view = new View(new Vector2f(), (Vector2f)window.Size);
         window.SetView(view);

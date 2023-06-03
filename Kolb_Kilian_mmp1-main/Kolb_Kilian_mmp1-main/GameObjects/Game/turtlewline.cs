@@ -139,6 +139,7 @@ public class Turtle : GameObject
         if(!IsFishing && inputman.GetKeyPressed(Keyboard.Key.Space)){
             IsFishing = true;
             initAnim = true;
+            PlaySound();
             return true;
         }
         return false;
@@ -162,5 +163,12 @@ public class Turtle : GameObject
 
     public Vector2f GetLineStart(){
         return startPoint;
+    }
+    private void PlaySound(){
+        if(ValueParser.ParseSettings(1) != 0){
+            SoundBuffer buffer  = AssetManager.Instance.SoundBuffers["CastLine"];
+            Sound sound = new(buffer);
+            sound.Play();
+        }
     }
 }

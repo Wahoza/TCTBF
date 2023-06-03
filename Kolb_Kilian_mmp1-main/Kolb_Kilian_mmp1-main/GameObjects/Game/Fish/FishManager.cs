@@ -41,13 +41,13 @@ public class FishManager : Fish
             float spawnX = 0;
             float spawnY = 0;
             if(random.Next(1,3)%2 == 0){
-                spawnX = center.X - (area.X +40)/2 + random.Next(1,3) % 2 * (area.X +40);
+                spawnX = center.X - (area.X +100)/2 + random.Next(1,3) % 2 * (area.X +100);
                 spawnY = center.Y + random.Next(-(int)area.Y/2, (int)area.Y/2); 
             }else{
                 if (center.Y + area.Y/2 > 0){
-                    spawnY = center.Y - (area.Y)/2 + (area.Y);
+                    spawnY = center.Y - (area.Y +100)/2 + (area.Y +100);
                 }else{
-                    spawnY = center.Y - (area.Y)/2 + random.Next(1,3) % 2 * (area.Y + 40);
+                    spawnY = center.Y - (area.Y +100)/2 + random.Next(1,3) % 2 * (area.Y + 100);
                 }
                 spawnX = center.X + random.Next(-(int)area.X/2, (int)area.X/2);
             }

@@ -18,8 +18,6 @@ public class Ending : GameObject
     
         Vector2f center = textureSize * 0.5f;
         sprite.Origin = center;
-
-        ValueParser.WriteGamestate(0,0);
     }
 
     public override void Update(float deltaTime, InputManager inputman)

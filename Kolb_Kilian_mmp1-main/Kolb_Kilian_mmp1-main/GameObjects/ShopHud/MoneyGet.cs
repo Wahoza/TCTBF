@@ -11,8 +11,18 @@ public class MoneyGet : GameObject
     float TTL;
     float value;
     float speed;
+    float waittime = 0.5f;
+
+    bool playSound = true;
+    float soundPlayTime = 0.5f;
+    float spaceoutTime = 0.05f;
+    float spaceoutElapsed = 0;
     public override void Initialize()
     {
+        if (ValueParser.ParseSettings(1) == 0){
+            playSound = false;
+        }
+
         MoneyText = new Text();
         Font font = AssetManager.Instance.Fonts["PixelFont"];
         MoneyText.Font = font;
@@ -35,9 +45,24 @@ public class MoneyGet : GameObject
 
     public override void Update(float deltaTime, InputManager inputman)
     {
-        if(value >=0){
-            value = (float)(int)((value-deltaTime*speed)*100)/100;
+        if(waittime < 0){
+            if(value > 0){
+                value = (float)(int)((value-deltaTime*speed)*100)/100;
+                if(soundPlayTime > 0){
+                    if(spaceoutElapsed >= spaceoutTime){
+                        PlaySound();
+                        spaceoutElapsed = 0;
+                    }else{
+                        spaceoutElapsed += deltaTime;
+                    }
+                    
+                    soundPlayTime -= deltaTime;
+                }
+            }
+        }else{
+            waittime -= deltaTime;
         }
+        
     
         MoneyText.DisplayedString = "+" + value;
         
@@ -53,5 +78,12 @@ public class MoneyGet : GameObject
         MoneyText.Position = pos;
 
         icon.Position = pos + new Vector2f(MoneyText.GetLocalBounds().Width, 0);
+    }
+    private void PlaySound(){
+        if(playSound){
+            SoundBuffer buffer = AssetManager.Instance.SoundBuffers["Coin"];
+            Sound sound = new Sound(buffer);
+            sound.Play();
+        }
     }
 }
