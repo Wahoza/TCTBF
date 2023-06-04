@@ -138,7 +138,7 @@ public class Game
             
         }else{
     
-            if(ValueParser.ParseGameState(2)>10000000){
+            if(ValueParser.ParseGameState(2)>10000000 && gameState != GameState.FinishPhase){
                 gameState = GameState.FinishPhase;
 
                 EndInitialize();
@@ -163,6 +163,14 @@ public class Game
 
                     gameObject.Update(deltaTime, InputManager.Instance);
                 }
+        }
+        if (gameState == GameState.FinishPhase){
+            foreach(GameObject o in gameObjects){
+                o.Update(deltaTime, InputManager.Instance);
+                if(o is Ending end){
+                    end.getMousePosition(fishMouse.GetMouseRect());
+                }
+            }
         }
 
         
@@ -194,7 +202,7 @@ public class Game
         if(Height > 30 && LastParsedMusicState[2] == 0){
             LastParsedMusicState[2] = 1;
             if(LastParsedMusicState[0] == 1){
-                    AboveWaterMusic.Pause();
+                    AboveWaterMusic.Stop();
 
                     UnderWaterMusic.PlayingOffset = AboveWaterMusic.PlayingOffset;
                     UnderWaterMusic.Play();
@@ -393,8 +401,11 @@ public class Game
         Ending end = new ();
         end.Initialize();
         end.SetArea(view.Size);
-
         gameObjects.Add(end);
+
+        fishMouse.Initialize();
+        fishMouse.SetFishMouseArea(view.Size);
+        gameObjects.Add(fishMouse);   
     }
     
 

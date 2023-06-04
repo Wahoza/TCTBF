@@ -9,6 +9,8 @@ public class Ending : GameObject
     float animationSpeed = 2;
     Vector2f area;
     Vector2f rectpos;
+    HudButton ExitButton = new();
+    FloatRect mouse;
     public override void Initialize()
     {
         Texture texture = AssetManager.Instance.Textures["EndScreen"];
@@ -18,11 +20,13 @@ public class Ending : GameObject
     
         Vector2f center = textureSize * 0.5f;
         sprite.Origin = center;
+
+        ExitButton.Initialize("CloseButton", 3 , new Vector2f(-900, -500));
     }
 
     public override void Update(float deltaTime, InputManager inputman)
     {
-
+        ExitButton.Update(mouse);
     }
     public void SetArea(Vector2f _area){
         area = _area;
@@ -33,10 +37,17 @@ public class Ending : GameObject
         }
         rectpos = -area/2;
     }
+    public void getMousePosition(FloatRect pos){
+        mouse = pos;
+    }
     public override void Draw(RenderWindow window, RenderStates states, bool shaderon)
     {
         FloatRect rect = new FloatRect(rectpos.X, rectpos.Y, area.X, area.Y);
         DrawUtils.DrawRect(Color.Black, rect, window);
         window.Draw(sprite);
+        ExitButton.Draw(window);
+        if(ExitButton.Clicked()){
+                window.Close();
+        }
     }
 }

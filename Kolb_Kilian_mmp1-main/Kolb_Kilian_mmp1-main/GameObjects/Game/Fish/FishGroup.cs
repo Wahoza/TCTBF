@@ -148,7 +148,7 @@ public class SubFish : Fish
         sprite.Origin = center;
 
         CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y *scale * hitboxscale);
-        movevec = new Vector2f(1,0);
+        movevec = new Vector2f(1 - (random.Next(2,3) %2) * 2,0);
         exists = false;
     }
     public override bool CollisionCheck(FloatRect player)
@@ -192,13 +192,15 @@ public class SubFish : Fish
 
     public override void SetPositon(Vector2f position)
     {
-        if(position.Y<100 && !exists){
-            exists = false;
-        }else{
-            sprite.Position = position;
-            value = scale + position.Y/10;
-            exists = true;
+        if(!exists){
+            if(position.Y<100){
+                exists = false;
+            }else{
+                value = scale + position.Y/10;
+                exists = true;
+            }
         }
+        sprite.Position = position;
     }
 
     public override void SetRotation(Vector2f Rotationvec)

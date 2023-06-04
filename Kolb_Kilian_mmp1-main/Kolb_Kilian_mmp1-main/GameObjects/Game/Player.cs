@@ -58,7 +58,7 @@ public class Player : GameObject
     float splashAnimTime = 0;
     public override void Initialize()
     {   
-        weight = 500 * ((float)ValueParser.ParseGameState(6))/5 ;
+        weight = 100 * ((float)ValueParser.ParseGameState(6)) ;
         
         move = new Vector2f(0, 0);
         CameraX = 0;
@@ -231,7 +231,7 @@ public class Player : GameObject
         if((int)move.Y <= 0){
             move += new Vector2f(0, 1) * dt * MoveScale * 5;
         }else{
-            move += new Vector2f(0, 1) * dt * MoveScale * 0.6f;
+            move += new Vector2f(0, 1) * dt * MoveScale * 0.6f * weight/90;
         }
 
         if(move.Y > weight  && sprite.Position.Y > 70){

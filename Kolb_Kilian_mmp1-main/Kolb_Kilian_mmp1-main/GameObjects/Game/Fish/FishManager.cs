@@ -23,7 +23,7 @@ public class FishManager : Fish
     {
         if(!FishCought){
             int n = random.Next(1, 10000);
-            if(n >10000-depth*10-200/(SpawnRateParse*SpawnRateParse)){
+            if(n >10000-depth*5-300/(SpawnRateParse*SpawnRateParse*4)){
                 FishBool = true;
             }else{
                 FishBool = false;
