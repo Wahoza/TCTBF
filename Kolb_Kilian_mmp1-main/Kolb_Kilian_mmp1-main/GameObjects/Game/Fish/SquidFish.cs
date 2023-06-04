@@ -18,7 +18,7 @@ public class SquidFish : Fish
     float FISH_TILING_X = 2;
     float FISH_TILING_Y = 1;
     float value = 0;
-    public override bool ColisionCheck(FloatRect player)
+    public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
             return true;

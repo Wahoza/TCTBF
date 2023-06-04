@@ -35,6 +35,7 @@ public class AssetManager
         LoadTexture("SquidFish", "./Assets/FishSprites/Squid.png");
         LoadTexture("BulletFish", "./Assets/FishSprites/Bullet.png");
         LoadTexture("BiggestFish", "./Assets/FishSprites/BigFish.png");
+        LoadTexture("SubFish", "./Assets/FishSprites/Fish.png");
 
         LoadTexture("Gradiant","./Assets/Other/gradient.png");
         LoadTexture("Bubbles","./Assets/FishSprites/Bubble.png");
@@ -66,6 +67,7 @@ public class AssetManager
         LoadSoundBuffer("Splash", "./Assets/Sound/hookinwater.wav");
         LoadSoundBuffer("Coin", "./Assets/Sound/coin.wav");
         LoadSoundBuffer("CastLine", "./Assets/Sound/fish.wav");
+
 
         LoadMusic("AboveWater", "./Assets/Music/AboveWater.ogg");
         LoadMusic("UnderWater", "./Assets/Music/UnderWater.ogg");

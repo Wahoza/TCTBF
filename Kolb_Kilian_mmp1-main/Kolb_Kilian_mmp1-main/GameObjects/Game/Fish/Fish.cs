@@ -4,7 +4,7 @@ using SFML.System;
 using SFML.Window;
 public abstract class Fish : GameObject{
 
-    public abstract bool ColisionCheck(FloatRect player);
+    public abstract bool CollisionCheck(FloatRect player);
     public abstract void MoveToGoal(Vector2f player);
     public abstract void SetPositon(Vector2f position);
     public abstract Vector2f GetPosition();

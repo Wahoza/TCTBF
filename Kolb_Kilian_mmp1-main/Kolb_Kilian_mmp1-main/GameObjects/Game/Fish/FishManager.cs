@@ -23,7 +23,7 @@ public class FishManager : Fish
     {
         if(!FishCought){
             int n = random.Next(1, 10000);
-            if(n >10000-depth-200/(SpawnRateParse*SpawnRateParse)){
+            if(n >10000-depth*10-200/(SpawnRateParse*SpawnRateParse)){
                 FishBool = true;
             }else{
                 FishBool = false;
@@ -37,18 +37,14 @@ public class FishManager : Fish
     public void SpawnFish(bool started, Vector2f _area, Vector2f center){
         area = _area;
         if(started && FishBool){
-            int FishNum = random.Next(1, 6);
+            int FishNum = random.Next(1, 7);
             float spawnX = 0;
             float spawnY = 0;
             if(random.Next(1,3)%2 == 0){
                 spawnX = center.X - (area.X +100)/2 + random.Next(1,3) % 2 * (area.X +100);
                 spawnY = center.Y + random.Next(-(int)area.Y/2, (int)area.Y/2); 
             }else{
-                if (center.Y + area.Y/2 > 0){
-                    spawnY = center.Y - (area.Y +100)/2 + (area.Y +100);
-                }else{
-                    spawnY = center.Y - (area.Y +100)/2 + random.Next(1,3) % 2 * (area.Y + 100);
-                }
+                spawnY = center.Y - (area.Y)/2 + (area.Y +100);
                 spawnX = center.X + random.Next(-(int)area.X/2, (int)area.X/2);
             }
             if(spawnY < 30){
@@ -82,13 +78,22 @@ public class FishManager : Fish
                 FishList.Add(DriftFish);
                 break;
             case 5:
-            if(maxBigCount >0 && depth > 250){
+            if(maxBigCount >0 && depth > 100){
                 maxBigCount--;
                 BiggestFish BiggestFish = new BiggestFish();
                 BiggestFish.Initialize();
                 BiggestFish.SetPositon(pos);
                 FishList.Add(BiggestFish);
             }
+            break;
+
+            case 6:
+                spawnY = center.Y - (area.Y)/2 + (area.Y +500);
+                spawnX = center.X + random.Next(-(int)area.X/2, (int)area.X/2);
+                FishGroup FishGroup = new FishGroup();
+                FishGroup.Initialize();
+                FishGroup.SetPositon(new Vector2f(spawnX, spawnY));
+                FishList.Add(FishGroup);
                 break;
             default:
                 break;
@@ -103,21 +108,29 @@ public class FishManager : Fish
     }
 
 
-    public override bool ColisionCheck(FloatRect player)
+    public override bool CollisionCheck(FloatRect player)
     {
         foreach(Fish fish in FishList){
-            if(fish.ColisionCheck(player)){
-                return fish.ColisionCheck(player);
+            if(fish.CollisionCheck(player)){
+                return fish.CollisionCheck(player);
             }
         }
         return false;
     }
     public Fish CollisionTest(FloatRect player){
         foreach(Fish fish in FishList){
-            if(fish.ColisionCheck(player)){
-                Fish save = fish;
-                FishCought = true;
-                return save;
+            if(fish.CollisionCheck(player)){
+                if(fish is FishGroup group){
+
+                    FishCought = true;
+                    return group.CollisionTest(player);
+                    
+                }else{
+                    
+                    Fish save = fish;
+                    FishCought = true;
+                    return save;
+                }
             }
         }
         return null;  
@@ -128,7 +141,7 @@ public class FishManager : Fish
         foreach(Fish fish in FishList){
             fish.MoveToGoal(player);
         }
-        depth = player.Y /40;
+        depth = player.Y /100;
     }
     public override void SetPositon(Vector2f position)
     {

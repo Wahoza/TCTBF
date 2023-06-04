@@ -20,7 +20,7 @@ public class DriftFish : Fish
     float animationTime = 0;
     float animationSpeed = 10;
     float value = 0;
-    public override bool ColisionCheck(FloatRect player)
+    public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
             return true;

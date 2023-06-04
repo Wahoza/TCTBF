@@ -170,7 +170,7 @@ public class BiggestFish : Fish
     {
         return FishItems[0];
     }
-    public override bool ColisionCheck(FloatRect player)
+    public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
             return true;

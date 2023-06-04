@@ -8,7 +8,7 @@ public class NormalFish : Fish
     private Vector2f movevec;
     FloatRect CollisionBox;
     private float scale = 3;
-    private float hitboxscale = 0.9f;
+    private float hitboxscale = 0.8f;
     Vector2f textureSize;
     float playerclose = 0;
     float speed;
@@ -17,7 +17,7 @@ public class NormalFish : Fish
     float animationTime = 0;
     float animationSpeed = 5;
     float value = 0;
-    public override bool ColisionCheck(FloatRect player)
+    public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
             return true;
@@ -86,20 +86,14 @@ public class NormalFish : Fish
             sprite.TextureRect.Height
         );
 
-        if(Utils.Angle(movevec) >= Math.PI){
-            sprite.Scale = new Vector2f(scale, -scale);
-        }
-
         sprite.Rotation = Utils.Angle(movevec) *  360 /2 /(float)Math.PI;
-
-        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
-        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
 
         if(sprite.Position.Y< 100){
             SetPositon(new Vector2f(sprite.Position.X, 100));
         }
-        
+        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
+        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
     }
     public override void SetPositon(Vector2f position)
     {

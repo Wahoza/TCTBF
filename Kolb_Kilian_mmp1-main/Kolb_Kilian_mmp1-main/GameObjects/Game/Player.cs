@@ -118,6 +118,8 @@ public class Player : GameObject
         }else if (!completed[0] && collided){
             if(collided && !qteActive){
                 PlaySound("Bite");
+                CoughtFish.SetPositon(sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2);
+                CoughtFish.SetRotation(GetHookPosition()-sprite.Position);
             }
             
             qteActive = true;
@@ -272,7 +274,7 @@ public class Player : GameObject
         }
         window.SetView(view);
 
-        if(!(completed[1] && completed[0])){
+        if(!((completed[1] && completed[0])||qteActive)){
             if(sprite.Position.Y <0 || !shaderon){
                 window.Draw(sprite);
             }else{
@@ -292,21 +294,18 @@ public class Player : GameObject
     }
     public Vector2f GetHookPosition()
     {
-        //if(!completed[0]){
-            float EmptySpaceComp = 1.7f;
-            Vector2f pos = sprite.Position - (textureSize * scale / 2)/EmptySpaceComp + new Vector2f(0, weight / 100);
-            if(currentAnimation == AnimationType.Left){
-                return pos;
-            }
-            else if (currentAnimation == AnimationType.Right){
-                return new Vector2f (pos.X + textureSize.X * scale/EmptySpaceComp, pos.Y);
-            }
-            else{
-                return new Vector2f (pos.X + textureSize.X/2 * scale/EmptySpaceComp, pos.Y);
-            }
-        //}else{
-        //    return (sprite.Position - new Vector2f(0, CollisionBox.Height/2));
-        //}
+
+        float EmptySpaceComp = 1.7f;
+        Vector2f pos = sprite.Position - (textureSize * scale / 2)/EmptySpaceComp + new Vector2f(0, weight / 100);
+        if(currentAnimation == AnimationType.Left){
+            return pos;
+        }
+        else if (currentAnimation == AnimationType.Right){
+            return new Vector2f (pos.X + textureSize.X * scale/EmptySpaceComp, pos.Y);
+        }
+        else{
+            return new Vector2f (pos.X + textureSize.X/2 * scale/EmptySpaceComp, pos.Y);
+        }
     }
     public bool[] GetCompleted(){
         return completed;

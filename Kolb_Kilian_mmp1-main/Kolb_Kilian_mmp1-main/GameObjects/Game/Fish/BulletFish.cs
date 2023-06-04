@@ -19,7 +19,7 @@ public class BulletFish : Fish
     float animationSpeed = 4;
     float value = 0;
 
-    public override bool ColisionCheck(FloatRect player)
+    public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
             return true;
@@ -29,10 +29,13 @@ public class BulletFish : Fish
 
     public override void Initialize()
     {
+        locked = false;
+        
         Texture texture =  AssetManager.Instance.Textures["BulletFish"];
         sprite = new Sprite(texture);
         textureSize = (Vector2f)texture.Size;
-            sprite.TextureRect = new IntRect(
+
+        sprite.TextureRect = new IntRect(
             0, 0,
             (int)(texture.Size.X / FISH_TILING_X),
             (int)(texture.Size.Y / FISH_TILING_Y)
@@ -53,12 +56,11 @@ public class BulletFish : Fish
     {
         if(!locked){
             if(Utils.Distance(player, sprite.Position) <= 400){
-                movevec = Utils.Normalize(player-sprite.Position);
+                movevec = Utils.Normalize(new Vector2f(player.X, player.Y -20)-sprite.Position);
                 locked = true;
             }else{
-                if(movevec == null){
-                    movevec = Utils.Normalize(player-sprite.Position);
-                }
+                movevec = Utils.Normalize(player-sprite.Position);
+                locked = false;
             }
         }
     }
@@ -80,8 +82,10 @@ public class BulletFish : Fish
             );
         } 
         else if (!locked){
+
             movevec.Y = 0;
-            sprite.Position += new Vector2f(movevec.Normalize().X *deltaTime * 100, 0);
+            sprite.Position += new Vector2f(movevec.X *deltaTime * 200, 0);
+
         }else{
             sprite.Position += movevec * speed * deltaTime;
             speed = 1000;
