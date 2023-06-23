@@ -14,8 +14,7 @@ public class Turtle : GameObject
     private float scale = 3;
     private float animationTime = 0;
     private float animationSpeed = 10;
-    private int[] frameCountPerAnimation = new int[1];
-    private AnimationType currentAnimation = AnimationType.Throw;
+    private int frameCount = 9;
     bool IsFishing = false;
     bool initAnim = false;
     public enum AnimationType
@@ -27,20 +26,16 @@ public class Turtle : GameObject
 
     //line related
     private VertexArray line;
-    bool lineVisible = false;
     Vector2f startPoint;
     Vector2f endPoint;
     Vector2f controlPoint;
     const int NumPoints = 100;
     private Sprite? LineEnd;
-
     private float LineEndScale = 3f;
-    private float LineStartScale = 4f;
     float lineanimationTime;
     public override void Initialize()
     {
         //turtle related
-        frameCountPerAnimation[0] = 9;
 
         turtleTexture = AssetManager.Instance.Textures["turtle"];
         sprite = new Sprite(turtleTexture);
@@ -61,7 +56,6 @@ public class Turtle : GameObject
         LineEnd.Scale *= LineEndScale;
 
         line = new VertexArray(PrimitiveType.LineStrip);
-        lineVisible = false;
 
         startPoint = new Vector2f(turtleTexture.Size.X/TURTLE_TILING_X * scale, turtleTexture.Size.Y / TURTLE_TILING_Y * scale + 0.2f);
         endPoint = startPoint;
@@ -92,9 +86,9 @@ public class Turtle : GameObject
         if(Throw() || initAnim){
             animationTime += deltaTime * animationSpeed;
 
-            int animationFrame = (int)animationTime % frameCountPerAnimation[(int)currentAnimation];
+            int animationFrame = (int)animationTime % frameCount;
             int spriteOffsetX = animationFrame * sprite.TextureRect.Width;
-            int spriteOffsetY = (int)currentAnimation * sprite.TextureRect.Height;
+            int spriteOffsetY = 0;
 
             sprite.TextureRect = new IntRect(
                 spriteOffsetX,
@@ -102,11 +96,11 @@ public class Turtle : GameObject
                 sprite.TextureRect.Width,
                 sprite.TextureRect.Height
             );
-            if(animationFrame == frameCountPerAnimation[(int)currentAnimation]-1){
+            if(animationFrame >= frameCount-1){
                 initAnim = false;
             }
 
-            //line animation this was pain
+            //line animation, magic numbers were aquired by testing multiple variants and values
             float updownspeed = 55;
             if(animationFrame < 4 && animationFrame > 1){
                 lineanimationTime += deltaTime * animationSpeed;
@@ -140,6 +134,7 @@ public class Turtle : GameObject
             IsFishing = true;
             initAnim = true;
             PlaySound();
+            Console.WriteLine("aaa");
             return true;
         }
         return false;

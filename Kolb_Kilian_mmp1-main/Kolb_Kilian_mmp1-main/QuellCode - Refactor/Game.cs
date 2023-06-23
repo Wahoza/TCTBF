@@ -148,7 +148,6 @@ public class Game
 
                         case Turtle turtle:
                             turtle.SetEndPoint(player.GetHookPosition());
-                            player.SetReturnPoint(turtle.GetLineStart());
                         break;
 
                         case Gradiant gradiant:
@@ -338,6 +337,7 @@ public class Game
         turtle.Initialize();
         turtle.SetPositon(new Vector2f(0, -40));
         turtle.SetEndPoint(player.GetHookPosition());
+        player.SetReturnPoint(turtle.GetLineStart());
         gameObjects.Add(turtle);
 
         Hud hud = new Hud();

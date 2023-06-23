@@ -299,8 +299,8 @@ public class Player : GameObject
     public bool GetQTEstatus(){
         return qteActive;
     }
-    public void SetReturnPoint(Vector2f _returnPoint){
-        returnPoint = _returnPoint;
+    public void SetReturnPoint(Vector2f origin){
+        returnPoint = origin;
     }
     public float GetMoveTimer(){
         return MoveTimer;

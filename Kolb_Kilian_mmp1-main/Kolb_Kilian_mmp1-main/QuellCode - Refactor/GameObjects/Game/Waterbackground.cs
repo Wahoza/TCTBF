@@ -21,30 +21,24 @@ public class WaterBackground : GameObject{
     public override void Draw(RenderWindow window)
     {
         Vector2f center = window.GetView().Center;
-        if(center.Y - area.Y/2>70){
-            Water.Top = center.Y - area.Y/2;
-        }else{
-            Water.Top = 70;
-        }
+        Water.Top = (center.Y - area.Y/2 > 70)
+            ? center.Y - area.Y/2
+            : 70;
         
         Water.Left = center.X- area.X/2;
-        byte blue;
-        if(center.Y < 30){
-            blue = 255;
-        }else if(center.Y/100 < 255){
-           blue = (byte)(255-(int)(center.Y/100));
-        }else{
-            blue = 0;
-        }
+        
+        byte blue = (center.Y < 30)
+            ? (byte)255
+            : (center.Y / 100 < 255)
+                ? (byte)(255 - (int)(center.Y / 100))
+                : (byte)0;
 
-        byte green;
-        if(center.Y < 30){
-            green = 200;
-        }else if(center.Y/50 < 200){
-           green = (byte)(200-(int)(center.Y/50));
-        }else{
-            green = 0;
-        }
+
+        byte green = (center.Y < 30)
+            ? (byte)200
+            : (center.Y / 50 < 200)
+                ? (byte)(200 - (int)(center.Y / 50))
+                : (byte)0;
         background.Position = new Vector2f(-area.X/2 - 2*scale, -area.Y/2 - background.Texture.Size.Y*scale/2 + 200);
 
         for (int i = -1; i <= 1; i++){
