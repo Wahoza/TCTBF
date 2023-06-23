@@ -140,7 +140,7 @@ public class Player : GameObject
             qteActive = false;
             if(completed[0]){
                 if(Utils.Distance(sprite.Position, returnPoint) > 20){
-                    sprite.Position += (returnPoint -sprite.Position).Normalize() * 500 * deltaTime;
+                    sprite.Position += (returnPoint -sprite.Position).Normalize() * 1000 * deltaTime;
                     currentAnimation = AnimationType.Down;
 
                 }else{

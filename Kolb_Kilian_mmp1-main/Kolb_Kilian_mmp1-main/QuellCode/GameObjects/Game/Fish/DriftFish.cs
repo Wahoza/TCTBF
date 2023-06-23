@@ -130,6 +130,6 @@ public class DriftFish : Fish
     }
     public override float GetValue()
     {
-        return value;
+        return value / 3;
     }
 }

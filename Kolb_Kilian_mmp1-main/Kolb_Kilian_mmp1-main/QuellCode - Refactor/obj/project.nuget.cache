@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "AKTnfZO1F0VnoPcftKFSgnDSjWXP/PyB3go4f9CA9AF6djswOctqrJ6DJ2pTP15xlIqbLnbaKs7y7GPzDDvDMw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\QuellCode - Refactor\\mmp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kilia\\.nuget\\packages\\csfml\\2.5.0\\csfml.2.5.0.nupkg.sha512",
+    "C:\\Users\\kilia\\.nuget\\packages\\sfml.audio\\2.5.0\\sfml.audio.2.5.0.nupkg.sha512",
+    "C:\\Users\\kilia\\.nuget\\packages\\sfml.graphics\\2.5.0\\sfml.graphics.2.5.0.nupkg.sha512",
+    "C:\\Users\\kilia\\.nuget\\packages\\sfml.net\\2.5.0\\sfml.net.2.5.0.nupkg.sha512",
+    "C:\\Users\\kilia\\.nuget\\packages\\sfml.system\\2.5.0\\sfml.system.2.5.0.nupkg.sha512",
+    "C:\\Users\\kilia\\.nuget\\packages\\sfml.window\\2.5.0\\sfml.window.2.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}

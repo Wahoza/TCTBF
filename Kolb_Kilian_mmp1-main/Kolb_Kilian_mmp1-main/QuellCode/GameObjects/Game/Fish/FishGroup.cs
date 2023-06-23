@@ -171,7 +171,7 @@ public class SubFish : Fish
 
     public override float GetValue()
     {
-        return value;
+        return value / 3;
     }
 
     public override void MoveToGoal(Vector2f center)
@@ -196,7 +196,7 @@ public class SubFish : Fish
             if(position.Y<100){
                 exists = false;
             }else{
-                value = scale + position.Y/10;
+                value = scale + position.Y/100;
                 exists = true;
             }
         }

@@ -12,18 +12,20 @@ public class FishManager : Fish
     float SpawnRateParse;
     bool FishCought = false;
     Vector2f area;
+    float weight;
     public override void Initialize()
     {
         FishList = new List<Fish>();
         maxBigCount = 3;
         SpawnRateParse = ValueParser.ParseGameState(4);
+        weight = ValueParser.ParseGameState(6);
     }
 
     public override void Update(float deltaTime)
     {
         if(!FishCought){
             int n = random.Next(1, 10000);
-            if(n >10000-depth*5-300/(SpawnRateParse*SpawnRateParse*4)){
+            if(n >10000-(depth*5)-300/(SpawnRateParse*SpawnRateParse*4/weight)){
                 FishBool = true;
             }else{
                 FishBool = false;
