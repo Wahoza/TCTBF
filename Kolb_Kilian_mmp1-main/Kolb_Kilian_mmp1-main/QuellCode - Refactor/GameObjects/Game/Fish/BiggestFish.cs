@@ -5,7 +5,6 @@ using SFML.System;
 public class BiggestFish : Fish
 {
     private Sprite printer = new();
-    private bool locked = false;
     private Vector2f movevec;
     FloatRect CollisionBox;
     private float scale = 5;

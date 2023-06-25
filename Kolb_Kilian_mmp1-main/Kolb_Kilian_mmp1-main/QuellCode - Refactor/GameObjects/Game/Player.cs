@@ -24,12 +24,9 @@ public class Player : GameObject
     Left = 1,
     Right = 2
 }
-    
-    private Vector2f MoveVec;
     private float MoveScale = 50;
     private float MoveCooldown = 0;
     public bool started = false;
-    private float DeltaTime;
     public bool collided = false;
     public bool restart = false;
 

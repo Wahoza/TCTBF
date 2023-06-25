@@ -10,7 +10,6 @@ public class Hud : GameObject
     string Depth = "";
     float ClockTime;
     Sprite MoveDisable = new();
-    bool Movement;
     Vector2f textureSize;
     float scale = 6;
     float SPRITE_TILING_X = 2;
@@ -26,7 +25,6 @@ public class Hud : GameObject
         DepthText.FillColor = Color.White;
         DepthText.Position = new Vector2f(0, 0);
 
-        Movement = true;
         Texture texture = AssetManager.Instance.Textures["MoveEnabled"];
         MoveDisable = new Sprite(texture);
         MoveDisable.TextureRect = new IntRect(

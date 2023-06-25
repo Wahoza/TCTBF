@@ -8,7 +8,6 @@ public class MoneyGet : GameObject
     Text MoneyText = new Text();
     Sprite icon = new();
     float iconscale = 3;
-    float TTL;
     float value;
     float speed;
     float waittime = 0.5f;

@@ -4,7 +4,6 @@ using SFML.System;
 public class FishManager : GameObject
 {
     List<Fish> FishList = new List<Fish>();
-    float timeSinceSpawn = 0;
     Random random = new Random();
     bool FishBool;
     float depth = 0;

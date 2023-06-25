@@ -11,8 +11,6 @@ public class WaterwDock : GameObject
     private float animationTime = 0;
     private float animationSpeed = 5;
     private int frameCount = 3;
-    bool startmovement = false;
-    private float DeltaTime;
     public override void Initialize()
     {
 

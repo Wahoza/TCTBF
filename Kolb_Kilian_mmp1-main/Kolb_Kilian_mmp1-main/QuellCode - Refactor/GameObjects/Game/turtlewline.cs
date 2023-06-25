@@ -17,9 +17,6 @@ public class Turtle : GameObject
     bool IsFishing = false;
     bool initAnim = false;
 
-    bool startmovement = false;
-    private float DeltaTime;
-
     //line related
     private VertexArray line = new();
     Vector2f startPoint;

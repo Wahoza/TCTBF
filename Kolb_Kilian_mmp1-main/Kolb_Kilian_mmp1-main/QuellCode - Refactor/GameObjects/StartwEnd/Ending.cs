@@ -5,8 +5,6 @@ using SFML.Window;
 public class Ending : GameObject
 {
     Sprite sprite = new();
-    float animationTime = 0;
-    float animationSpeed = 2;
     Vector2f area;
     Vector2f rectpos;
     HudButton ExitButton = new();
