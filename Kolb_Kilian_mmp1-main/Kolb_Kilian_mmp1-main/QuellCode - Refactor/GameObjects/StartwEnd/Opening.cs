@@ -4,7 +4,7 @@ using SFML.System;
 using SFML.Window;
 public class Opening : GameObject
 {
-    Sprite sprite;
+    Sprite sprite = new();
     float OPENING_TILING_X = 38;
     float animationTime = 0;
     float animationSpeed = 2;

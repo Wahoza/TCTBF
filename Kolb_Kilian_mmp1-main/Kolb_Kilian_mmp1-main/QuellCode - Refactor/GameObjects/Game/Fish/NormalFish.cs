@@ -4,7 +4,7 @@ using SFML.System;
 
 public class NormalFish : Fish
 {
-    private Sprite sprite;
+    private Sprite sprite = new();
     private Vector2f movevec;
     FloatRect CollisionBox;
     private float scale = 3;
@@ -13,7 +13,6 @@ public class NormalFish : Fish
     float playerclose = 0;
     float speed;
     float FISH_TILING_X = 2;
-    float FISH_TILING_Y = 1;
     float animationTime = 0;
     float animationSpeed = 5;
     float value = 0;
@@ -33,9 +32,9 @@ public class NormalFish : Fish
             sprite.TextureRect = new IntRect(
             0, 0,
             (int)(texture.Size.X / FISH_TILING_X),
-            (int)(texture.Size.Y / FISH_TILING_Y)
+            (int)(texture.Size.Y )
         );
-        textureSize = new Vector2f(sprite.Texture.Size.X/FISH_TILING_X, sprite.Texture.Size.Y/FISH_TILING_Y);
+        textureSize = new Vector2f(sprite.Texture.Size.X/FISH_TILING_X, sprite.Texture.Size.Y);
 
         Random random = new Random();
         scale =  random.Next(20, 50)/10;
@@ -96,7 +95,7 @@ public class NormalFish : Fish
     {
         sprite.Position = position;
         if(value == 0){
-            value = 10 + scale + position.Y/10;
+            value = scale + position.Y/10;
         }
     }
 

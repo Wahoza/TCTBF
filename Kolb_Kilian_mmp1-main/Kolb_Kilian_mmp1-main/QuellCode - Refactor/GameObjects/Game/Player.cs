@@ -8,7 +8,7 @@ public class Player : GameObject
     private const int PLAYER_TILING_X = 3;
     private const int PLAYER_TILING_Y = 3;
 
-    private Sprite sprite;
+    private Sprite sprite = new();
 
     private float animationTime = 0;
     private float animationSpeed = 10;
@@ -33,17 +33,17 @@ public class Player : GameObject
     public bool collided = false;
     public bool restart = false;
 
-    Fish CoughtFish;
+    Fish CoughtFish = null!;
     Vector2f textureSize;
     float scale = 3;
     float hitboxscale = 0.5f;
 
 
-    View view;
+    View view = new();
     float CameraX = 0;
     bool CameramoveX = true;
 
-    FishQTE qte;
+    FishQTE qte = new();
     bool qteActive;
     bool[] completed = new bool[2];
     private Vector2f returnPoint;
@@ -51,7 +51,7 @@ public class Player : GameObject
     float MoveTimer;
     float weight;
 
-    Sprite splash;
+    Sprite splash = new();
     float splashAnimSpeed = 10;
     float SPLASH_TILING_X = 5;
     bool splashAnim = false;
@@ -92,7 +92,7 @@ public class Player : GameObject
 
         MoveTimer = ValueParser.ParseGameState(ValueParser.linePositionGame.MoveTime) * 15;
 
-        CoughtFish = null;
+        CoughtFish = null!;
 
         Texture SplashTexture = AssetManager.Instance.Textures["Splash"];
         splash = new Sprite(SplashTexture);

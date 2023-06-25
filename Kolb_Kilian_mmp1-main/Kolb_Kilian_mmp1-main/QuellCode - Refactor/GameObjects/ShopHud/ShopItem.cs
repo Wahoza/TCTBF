@@ -4,10 +4,10 @@ using SFML.System;
 using SFML.Window;
 public class ShopItem
 {
-    Sprite background;
-    Sprite icon;
-    ShopButton button;
-    ShopBar bar;
+    Sprite background = new();
+    Sprite icon = new();
+    ShopButton button = new();
+    ShopBar bar = new();
     float scale = 10;
     int InitialCost;
     ValueParser.linePositionGame ParseLocation;

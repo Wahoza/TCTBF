@@ -13,9 +13,9 @@ public class Game
     FishMouse fishMouse = new();
     bool qteActive;
 
-    Music AboveWaterMusic;
-    Music UnderWaterMusic;
-    Music VictoryMusic;
+    Music AboveWaterMusic = null!;
+    Music UnderWaterMusic = null!;
+    Music VictoryMusic = null!;
 
     //Compares new music state[0] to old music state [1], to avoid repeating music.Play(). [2]: currently active music
     int[] MusicState = new int[3]{0, 0, 0};

@@ -5,7 +5,7 @@ using SFML.Window;
 public class HudButton
 {
     bool pressed;
-    Sprite buttonSprite;
+    Sprite buttonSprite = new();
     float BUTTON_TILING_X = 2;
     FloatRect CollisionBox;
     Vector2f textureSize;

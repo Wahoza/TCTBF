@@ -4,7 +4,7 @@ using SFML.System;
 using SFML.Window;
 public class Bubble : GameObject
 {
-    private Sprite sprite;
+    private Sprite sprite = new();
     Vector2f textureSize;
     float BUBBLE_TILING_X = 4;
     float BUBBLE_TILING_Y = 1;

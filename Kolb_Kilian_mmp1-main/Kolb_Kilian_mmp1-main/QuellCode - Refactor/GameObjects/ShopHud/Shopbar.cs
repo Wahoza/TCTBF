@@ -4,7 +4,7 @@ using SFML.System;
 using SFML.Window;
 
 public class ShopBar : GameObject{
-    Sprite sprite;
+    Sprite sprite = new();
     int upgradeTiling = 6;
     ValueParser.linePositionGame ParseLocation;
     float scale = 3;

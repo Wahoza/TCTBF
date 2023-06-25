@@ -2,18 +2,17 @@ using SFML.Graphics;
 using SFML.System;
 
 
-//Note: due to prior code the Group needs to be a fish, however not all of the Methods are actually usefull
-public class FishGroup : Fish
+//Generator for FIsh of "Group"
+public class FishGroupCreator
 {
     public List<SubFish> Group = new();
-    SubFish collided;
     Vector2f position;
     float radius;
     int MaxfishAmount = 7;
     int MinfishAmount = 1;
     Random random = new();
 
-    public override void Initialize()
+    public void Initialize()
     {
         radius = random.Next(100, 500);
         Group = new();
@@ -24,7 +23,7 @@ public class FishGroup : Fish
             Group.Add(fish);
         }
     }
-    public override bool CollisionCheck(FloatRect player)
+    public bool CollisionCheck(FloatRect player)
     {
         foreach(SubFish fish in Group){
             if(fish.CollisionCheck(player)){
@@ -35,75 +34,24 @@ public class FishGroup : Fish
         return false;
     }
 
-    public Fish CollisionTest(FloatRect player){
-        foreach(SubFish fish in Group){
-            if(fish.CollisionCheck(player)){
-                collided = fish;
-                return fish;
-            }
-
-        }
-        return null;
-    }
-
-    public override Vector2f GetPosition()
+    public void SetPositon(Vector2f _position)
     {
-        return position;
-    }
-
-    public override float GetScale()
-    {
-        return radius;
-    }
-
-    public override float GetValue()
-    {
-        return collided.GetValue();
-    }
-
-    public override void MoveToGoal(Vector2f player)
-    {
-        //handles Movement around Center
-        foreach(SubFish fish in Group){
-            fish.MoveToGoal(position);
-        }
-        
-    }
-
-    public override void SetPositon(Vector2f _position)
-    {
-        position = _position;
+        position = _position + new Vector2f(0, radius);
         foreach(SubFish fish in Group){
             float y = random.Next(0, 2*(int)radius) - radius;
             float x = random.Next(0, 2*(int)radius) - radius;
-            fish.SetPositon(_position - new Vector2f(x, y));
+            fish.SetPositon(position - new Vector2f(x, y));
+            fish.SetOrigin(position);
         }
     }
-
-    public override void SetRotation(Vector2f Rotationvec)
-    {
-        foreach(SubFish fish in Group){
-            fish.SetRotation(Rotationvec);
-        }
-    }
-
-    public override void Update(float deltaTime)
-    {
-        foreach(SubFish fish in Group){
-            fish.Update(deltaTime);
-        }
-    }
-    public override void Draw(RenderWindow window)
-    {
-        foreach(SubFish fish in Group){
-            fish.Draw(window);
-        }
+    public List<SubFish> GetFishList(){
+        return Group;
     }
 }
 
 public class SubFish : Fish
 {
-    private Sprite sprite;
+    private Sprite sprite = new();
     private Vector2f movevec;
     FloatRect CollisionBox;
     private float scale = 3;
@@ -118,6 +66,7 @@ public class SubFish : Fish
     float value = 0;
     float radius;
     bool exists;
+    Vector2f CenterOrigin = new Vector2f(0,0);
 
     public override void Initialize()
     {
@@ -144,8 +93,7 @@ public class SubFish : Fish
 
         sprite.Scale *= scale;
 
-        Vector2f center = textureSize * 0.5f;
-        sprite.Origin = center;
+        sprite.Origin = textureSize * 0.5f;
 
         CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y *scale * hitboxscale);
         movevec = new Vector2f(1 - (random.Next(2,3) %2) * 2,0);
@@ -153,10 +101,10 @@ public class SubFish : Fish
     }
     public override bool CollisionCheck(FloatRect player)
     {
-        if(CollisionBox.Intersects(player) && exists){
-            return true;
-        }
-        return false;
+        return CollisionBox.Intersects(player) && exists;
+    }
+    public void SetOrigin(Vector2f FishOrigin){
+        CenterOrigin = FishOrigin;
     }
 
     public override Vector2f GetPosition()
@@ -174,19 +122,22 @@ public class SubFish : Fish
         return value / 3;
     }
 
-    public override void MoveToGoal(Vector2f center)
+    public override void MoveToGoal(Vector2f player)
     {
-        if(Utils.Distance(center, sprite.Position) > radius){
-            if(center.X > sprite.Position.X){
+        //doesnt react to player, therefore ignores player
+        if(Utils.Distance(CenterOrigin, sprite.Position) > radius){
+            if(CenterOrigin.X > sprite.Position.X){
                 movevec = new Vector2f(1, 0);
             }else{
                 movevec = new Vector2f (-1, 0);
             }
-        if(movevec.X>0){
-            sprite.Scale = new Vector2f (scale, scale);
-        }else{
-            sprite.Scale = new Vector2f (-scale, scale);
-        }
+
+            //turns the fish around
+            if(movevec.X>0){
+                sprite.Scale = new Vector2f (scale, scale);
+            }else{
+                sprite.Scale = new Vector2f (-scale, scale);
+            }
         }
     }
 
@@ -196,7 +147,9 @@ public class SubFish : Fish
             if(position.Y<100){
                 exists = false;
             }else{
-                value = scale + position.Y/70;
+                if(value == 0){
+                    value = scale *0.7f + position.Y/40;
+                }
                 exists = true;
             }
         }
@@ -228,7 +181,6 @@ public class SubFish : Fish
                 sprite.TextureRect.Width,
                 sprite.TextureRect.Height
             );
-
 
             CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
             CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;

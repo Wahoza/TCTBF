@@ -4,7 +4,7 @@ using SFML.System;
 using SFML.Window;
 public class ShopButton : GameObject
 {
-    Sprite sprite;
+    Sprite sprite = new();
     int BUTTON_TILING_X = 3;
     FloatRect CollisionBox;
     float scale = 5;

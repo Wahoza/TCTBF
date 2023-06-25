@@ -12,9 +12,7 @@ public class Vendor : GameObject
     }
     bool StartPhase;
     Vendorstate state;
-    ShopHud shopHud;
-    Sprite Information;
-
+    ShopHud shopHud = new();
 
     HudButton ShopButton = new();
     HudButton InformationButton = new HudButton();
@@ -24,8 +22,8 @@ public class Vendor : GameObject
     SettingsButton MusicButton = new();
 
     FloatRect mouse;
-    Sprite information;
-    Sprite VendorSprite;
+    Sprite information = new();
+    Sprite VendorSprite = new();
     float VENDOR_TILING_X = 5;
     float scale = 4;
     float animationTime = 0;

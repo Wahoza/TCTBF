@@ -6,7 +6,7 @@ public class WaterBackground : GameObject{
     FloatRect Water = new FloatRect();
     Vector2f area;
     
-    private Sprite background;
+    private Sprite background = new();
     private float scale = 0;
     public override void Initialize()
     {

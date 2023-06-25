@@ -4,7 +4,7 @@ using SFML.System;
 using SFML.Window;
 public class Ending : GameObject
 {
-    Sprite sprite;
+    Sprite sprite = new();
     float animationTime = 0;
     float animationSpeed = 2;
     Vector2f area;

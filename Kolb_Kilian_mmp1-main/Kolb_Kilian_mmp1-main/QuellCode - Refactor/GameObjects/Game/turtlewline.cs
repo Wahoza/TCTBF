@@ -9,35 +9,31 @@ public class Turtle : GameObject
     private const int TURTLE_TILING_X = 9;
     private const int TURTLE_TILING_Y = 1;
 
-    private Sprite sprite;
-    private Texture turtleTexture;
+    private Sprite sprite = new();
     private float scale = 3;
     private float animationTime = 0;
     private float animationSpeed = 10;
     private int frameCount = 9;
     bool IsFishing = false;
     bool initAnim = false;
-    public enum AnimationType
-{
-    Throw = 0
-}
+
     bool startmovement = false;
     private float DeltaTime;
 
     //line related
-    private VertexArray line;
+    private VertexArray line = new();
     Vector2f startPoint;
     Vector2f endPoint;
     Vector2f controlPoint;
     const int NumPoints = 100;
-    private Sprite? LineEnd;
+    private Sprite LineEnd = new();
     private float LineEndScale = 3f;
     float lineanimationTime;
     public override void Initialize()
     {
         //turtle related
 
-        turtleTexture = AssetManager.Instance.Textures["turtle"];
+        Texture turtleTexture = AssetManager.Instance.Textures["turtle"];
         sprite = new Sprite(turtleTexture);
         sprite.TextureRect = new IntRect(
             0, 0,
@@ -77,7 +73,7 @@ public class Turtle : GameObject
     public void SetPositon(Vector2f pos){
         sprite.Position = pos;
 
-        startPoint = new Vector2f(turtleTexture.Size.X/TURTLE_TILING_X/scale * 0.5f, turtleTexture.Size.Y / TURTLE_TILING_Y/scale*4f) + sprite.Position;
+        startPoint = new Vector2f(sprite.Texture.Size.X/TURTLE_TILING_X/scale * 0.5f, sprite.Texture.Size.Y / TURTLE_TILING_Y/scale*4f) + sprite.Position;
         endPoint = startPoint;
         controlPoint = startPoint;
     }
@@ -134,7 +130,6 @@ public class Turtle : GameObject
             IsFishing = true;
             initAnim = true;
             PlaySound();
-            Console.WriteLine("aaa");
             return true;
         }
         return false;

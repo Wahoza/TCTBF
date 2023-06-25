@@ -6,7 +6,7 @@ using SFML.Window;
 public class MoneyGet : GameObject
 {
     Text MoneyText = new Text();
-    Sprite icon;
+    Sprite icon = new();
     float iconscale = 3;
     float TTL;
     float value;

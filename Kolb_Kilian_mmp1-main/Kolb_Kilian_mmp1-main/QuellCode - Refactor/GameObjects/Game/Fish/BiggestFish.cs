@@ -4,7 +4,7 @@ using SFML.System;
 
 public class BiggestFish : Fish
 {
-    private Sprite printer;
+    private Sprite printer = new();
     private bool locked = false;
     private Vector2f movevec;
     FloatRect CollisionBox;
@@ -37,7 +37,7 @@ public class BiggestFish : Fish
         textureSize = new Vector2f(printer.Texture.Size.X/FISH_TILING_X, printer.Texture.Size.Y/FISH_TILING_Y);
 
         Random random = new Random();
-        scale =  random.Next(40, 100)/10;
+        scale =  random.Next(70, 100)/10;
         speed = 300/scale;
         printer.Scale *= scale;
 

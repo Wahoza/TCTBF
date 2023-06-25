@@ -6,7 +6,7 @@ using SFML.Window;
 public class MoneyHud : GameObject
 {
     Text MoneyText = new Text();
-    Sprite icon;
+    Sprite icon = new();
     float iconscale = 3;
     public override void Initialize()
     {
