@@ -1,4 +1,5 @@
-//This Fish will Lock Target once and move quickly in that direction
+//Author: Kilian Kolb
+//This Fish will Lock Target once and move quickly in that direction (with a slight anticipation of the players fall)
 using SFML.Graphics;
 using SFML.System;
 
@@ -17,6 +18,7 @@ public class BulletFish : Fish
     float animationSpeed = 4;
     float value = 0;
     float scale;
+    float playerWeight;
     public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
@@ -48,13 +50,14 @@ public class BulletFish : Fish
         Vector2f center = textureSize * 0.5f;
         sprite.Origin = center;
         CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y*scale * hitboxscale);
+        playerWeight = ValueParser.ParseGameState(ValueParser.linePositionGame.Weight) * 40;
     }
 
     public override void MoveToGoal(Vector2f player)
     {
         if(!locked){
             if(Utils.Distance(player, sprite.Position) <= 400){
-                movevec = Utils.Normalize(new Vector2f(player.X, player.Y -20)-sprite.Position);
+                movevec = Utils.Normalize(new Vector2f(player.X, player.Y + playerWeight)-sprite.Position);
                 locked = true;
             }else{
                 movevec = Utils.Normalize(player-sprite.Position);

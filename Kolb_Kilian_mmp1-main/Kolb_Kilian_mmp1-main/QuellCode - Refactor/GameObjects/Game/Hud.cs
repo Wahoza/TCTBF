@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -8,7 +9,8 @@ public class Hud : GameObject
     Text DepthText = new();
     Vector2f DistanceFromEdge = new Vector2f(20, 20);
     string Depth = "";
-    float ClockTime;
+    float MoveAmount;
+    float InitialMoveAmount;
     Sprite MoveDisable = new();
     Vector2f textureSize;
     float scale = 6;
@@ -53,22 +55,8 @@ public class Hud : GameObject
         }
         DepthText.DisplayedString = "Depth: " + Depth;
 
-        if(ClockTime >= 0){
-            int Minutes = (int)(ClockTime / 60);
-            int Seconds = (int)(ClockTime - Minutes * 60);
-            string MinuteString;
-            string SecondString;
-            if(Minutes>=10){
-                MinuteString = ""+Minutes;
-            }else{
-                MinuteString = "0"+Minutes;
-            }
-            if(Seconds>=10){
-                SecondString = ""+Seconds;
-            }else{
-                SecondString = "0"+Seconds;
-            }
-            TimeText.DisplayedString = MinuteString + ":" + SecondString;
+        if(InitialMoveAmount - MoveAmount >= 0){
+            TimeText.DisplayedString = "" +(InitialMoveAmount - MoveAmount);
         }else{
 
             int spriteOffsetX = 1 * MoveDisable.TextureRect.Width;
@@ -91,7 +79,13 @@ public class Hud : GameObject
         window.Draw(TimeText);
         window.Draw(MoveDisable);
     }
-    public void SetTimer(float _ClockTime){
-        ClockTime = _ClockTime;
+    public void SetMoveAmount(float _MoveAmount){
+        MoveAmount += _MoveAmount;
+    }
+    public void SetInitialMoveAmount(float init){
+        InitialMoveAmount = init;
+    }
+    public void ChangeMovesAllowed(float move){
+        MoveAmount -= move;
     }
 }

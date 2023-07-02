@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 //This Fish will move twoard the hook but be scared away
 using SFML.Graphics;
 using SFML.System;

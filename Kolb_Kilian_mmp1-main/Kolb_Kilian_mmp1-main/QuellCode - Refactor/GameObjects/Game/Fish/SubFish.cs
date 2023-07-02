@@ -1,3 +1,5 @@
+//Author: Kilian Kolb
+//Fish that swims back and forth in an Area with a set radius
 using SFML.Graphics;
 using SFML.System;
 public class SubFish : Fish

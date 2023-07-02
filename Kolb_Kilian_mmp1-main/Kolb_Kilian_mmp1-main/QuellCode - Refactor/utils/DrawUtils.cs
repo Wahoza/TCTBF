@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;

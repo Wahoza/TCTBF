@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using System;
 using System.IO;
 

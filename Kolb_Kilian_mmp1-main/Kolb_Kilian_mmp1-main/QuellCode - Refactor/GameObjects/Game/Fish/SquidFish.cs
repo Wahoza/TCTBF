@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 //This Fish will move in bursts twoards the hook
 using SFML.Graphics;
 using SFML.System;

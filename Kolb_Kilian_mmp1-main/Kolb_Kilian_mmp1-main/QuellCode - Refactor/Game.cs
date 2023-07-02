@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -159,7 +160,7 @@ public class Game
                         break;
 
                         case Hud hud:
-                            hud.SetTimer(player.GetMoveTimer());
+                            hud.SetMoveAmount(player.GetMoveAmount());
                         break;
                     }
                 }
@@ -342,6 +343,7 @@ public class Game
 
         Hud hud = new Hud();
         hud.Initialize();
+        hud.SetInitialMoveAmount(player.GetInitialMoveAmount());
         gameObjects.Add(hud);
 
         qteActive = false;

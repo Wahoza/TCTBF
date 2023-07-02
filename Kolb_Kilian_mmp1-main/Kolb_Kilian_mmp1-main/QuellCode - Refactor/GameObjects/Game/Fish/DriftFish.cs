@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 //This Fish will Lock Target once and move quickly in that direction
 using SFML.Graphics;
 using SFML.System;

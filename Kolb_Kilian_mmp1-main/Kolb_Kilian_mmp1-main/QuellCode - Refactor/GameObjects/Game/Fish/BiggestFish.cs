@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 //this is a long fish; it just swims twoards the player
 using SFML.Graphics;
 using SFML.System;

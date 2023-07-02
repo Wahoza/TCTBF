@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -45,7 +46,7 @@ public class Player : GameObject
     bool[] completed = new bool[2];
     private Vector2f returnPoint;
 
-    float MoveTimer;
+    float MoveValue;
     float weight;
 
     Sprite splash = new();
@@ -53,9 +54,10 @@ public class Player : GameObject
     float SPLASH_TILING_X = 5;
     bool splashAnim = false;
     float splashAnimTime = 0;
+    float MoveTotal;
     public override void Initialize()
     {   
-        weight = 70 * ((float)ValueParser.ParseGameState(ValueParser.linePositionGame.Weight));
+        weight = 60 * ((float)ValueParser.ParseGameState(ValueParser.linePositionGame.Weight));
         
         move = new Vector2f(0, 0);
         CameraX = 0;
@@ -87,7 +89,7 @@ public class Player : GameObject
         qte.Initialize();
         qteActive = false;
 
-        MoveTimer = ValueParser.ParseGameState(ValueParser.linePositionGame.MoveTime) * 15;
+        MoveTotal = ValueParser.ParseGameState(ValueParser.linePositionGame.MoveTime) * 5;
 
         CoughtFish = null!;
 
@@ -185,29 +187,36 @@ public class Player : GameObject
     }
 
     private void Move(float dt){
-        MoveTimer -= dt;
-        if(MoveTimer >= 0){
+        if(MoveTotal > 0){
 
             if(MoveCooldown <= 0 && sprite.Position.Y >= 100){
                 if(InputManager.Instance.GetKeyDown(Keyboard.Key.A)){
                     move = new Vector2f(-4, -2) * MoveScale;
                     MoveCooldown = (float)0.5;
                     currentAnimation = AnimationType.Left;
+                    MoveValue = 1;
                     }
                 if(InputManager.Instance.GetKeyDown(Keyboard.Key.D)){
                     move = new Vector2f(4, -2) * MoveScale;
                     MoveCooldown = (float)0.5;
-                    currentAnimation = AnimationType.Right; 
+                    currentAnimation = AnimationType.Right;
+                    MoveValue = 1;
                 }
                 if(InputManager.Instance.GetKeyDown(Keyboard.Key.S)){
                     move = new Vector2f(0, -5) * MoveScale;
                     MoveCooldown = (float)0.5;
-                    currentAnimation = AnimationType.Down; 
+                    currentAnimation = AnimationType.Down;
+                    MoveValue = 1;
                 }
-
             }else{
                 MoveCooldown -= dt;
+                MoveValue = 0;
             }
+
+            if(Math.Abs(move.X)<= 1){
+                currentAnimation = AnimationType.Down;
+            }
+            MoveTotal -= MoveValue;
         }
         CheckCameraCollision();
 
@@ -299,8 +308,11 @@ public class Player : GameObject
     public void SetReturnPoint(Vector2f origin){
         returnPoint = origin;
     }
-    public float GetMoveTimer(){
-        return MoveTimer;
+    public float GetMoveAmount(){
+        return MoveValue;
+    }
+    public float GetInitialMoveAmount(){
+        return MoveTotal;
     }
     public void SetCoughtFish(Fish fish){
         CoughtFish = fish;

@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.System;
 
@@ -26,7 +27,7 @@ public class FishManager : GameObject
     {
         if(!FishCought){
             int n = random.Next(1, 10000);
-            if(n >10000-(depth*5)-300/(SpawnRateParse*SpawnRateParse*4/weight)){
+            if(n >10000-(depth*5)-300/(SpawnRateParse*SpawnRateParse*5/weight)){
                 FishBool = true;
             }else{
                 FishBool = false;
