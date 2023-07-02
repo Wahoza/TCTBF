@@ -1,9 +1,10 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Window;
 
 public class InputManager
 {
-    private static InputManager instance;
+    private static InputManager instance = null!;
 
     public static InputManager Instance
     {

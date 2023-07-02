@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -7,14 +8,16 @@ public class Hud : GameObject
 {
     Text DepthText = new();
     Vector2f DistanceFromEdge = new Vector2f(20, 20);
-    string Depth;
-    float ClockTime;
-    Sprite MoveDisable;
-    bool Movement;
+    string Depth = "";
+    float MoveAmount;
+    float InitialMoveAmount;
+    Sprite MoveDisable = new();
     Vector2f textureSize;
     float scale = 6;
     float SPRITE_TILING_X = 2;
     Text TimeText = new();
+    float DepthOffset = -414;
+    float TextDistanceFromLeft = 80;
     public override void Initialize(){
         Font font = AssetManager.Instance.Fonts["PixelFont"];
         DepthText.Font = font;
@@ -24,7 +27,6 @@ public class Hud : GameObject
         DepthText.FillColor = Color.White;
         DepthText.Position = new Vector2f(0, 0);
 
-        Movement = true;
         Texture texture = AssetManager.Instance.Textures["MoveEnabled"];
         MoveDisable = new Sprite(texture);
         MoveDisable.TextureRect = new IntRect(
@@ -46,29 +48,15 @@ public class Hud : GameObject
     }
     public override void Update(float deltaTime)
     {
-        if((DepthText.Position.Y * -1 -414) < 0){
-            Depth = (((int)((DepthText.Position.Y+414)/100))*-1).ToString();
+        if((DepthText.Position.Y * -1 +DepthOffset) < 0){
+            Depth = (((int)((DepthText.Position.Y - DepthOffset)/100))*-1).ToString();
         }else{
             Depth = "0";
         }
         DepthText.DisplayedString = "Depth: " + Depth;
 
-        if(ClockTime >= 0){
-            int Minutes = (int)(ClockTime / 60);
-            int Seconds = (int)(ClockTime - Minutes * 60);
-            string MinuteString;
-            string SecondString;
-            if(Minutes>=10){
-                MinuteString = ""+Minutes;
-            }else{
-                MinuteString = "0"+Minutes;
-            }
-            if(Seconds>=10){
-                SecondString = ""+Seconds;
-            }else{
-                SecondString = "0"+Seconds;
-            }
-            TimeText.DisplayedString = MinuteString + ":" + SecondString;
+        if(InitialMoveAmount - MoveAmount >= 0){
+            TimeText.DisplayedString = "" +(InitialMoveAmount - MoveAmount);
         }else{
 
             int spriteOffsetX = 1 * MoveDisable.TextureRect.Width;
@@ -85,13 +73,19 @@ public class Hud : GameObject
     public override void Draw(RenderWindow window)
     {
         DepthText.Position = window.GetView().Center - window.GetView().Size / 2 + DistanceFromEdge;
-        TimeText.Position = window.GetView().Center - window.GetView().Size / 2 + DistanceFromEdge+new Vector2f(MoveDisable.TextureRect.Width * scale, 80);
-        MoveDisable.Position = window.GetView().Center - window.GetView().Size / 2 + DistanceFromEdge+new Vector2f(MoveDisable.TextureRect.Width * scale/2 -6, 80);
+        TimeText.Position = window.GetView().Center - window.GetView().Size / 2 + DistanceFromEdge+new Vector2f(MoveDisable.TextureRect.Width * scale, TextDistanceFromLeft);
+        MoveDisable.Position = window.GetView().Center - window.GetView().Size / 2 + DistanceFromEdge+new Vector2f(MoveDisable.TextureRect.Width * scale/2 -6, TextDistanceFromLeft);
         window.Draw(DepthText);
         window.Draw(TimeText);
         window.Draw(MoveDisable);
     }
-    public void SetTimer(float _ClockTime){
-        ClockTime = _ClockTime;
+    public void SetMoveAmount(float _MoveAmount){
+        MoveAmount += _MoveAmount;
+    }
+    public void SetInitialMoveAmount(float init){
+        InitialMoveAmount = init;
+    }
+    public void ChangeMovesAllowed(float move){
+        MoveAmount -= move;
     }
 }

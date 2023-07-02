@@ -1,17 +1,18 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
 public class ShopItem
 {
-    Sprite background;
-    Sprite icon;
-    ShopButton button;
-    ShopBar bar;
+    Sprite background = new();
+    Sprite icon = new();
+    ShopButton button = new();
+    ShopBar bar = new();
     float scale = 10;
     int InitialCost;
-    int ParseLocation;
-    public void Initialize(string FileName, int _InitialCost, int _ParseLocation)
+    ValueParser.linePositionGame ParseLocation;
+    public void Initialize(string FileName, int _InitialCost, ValueParser.linePositionGame _ParseLocation)
     {
         Texture texture = AssetManager.Instance.Textures["ShopBackground"];
         background = new Sprite(texture);

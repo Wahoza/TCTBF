@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -6,9 +7,8 @@ using SFML.Window;
 public class MoneyGet : GameObject
 {
     Text MoneyText = new Text();
-    Sprite icon;
+    Sprite icon = new();
     float iconscale = 3;
-    float TTL;
     float value;
     float speed;
     float waittime = 0.5f;
@@ -19,7 +19,7 @@ public class MoneyGet : GameObject
     float spaceoutElapsed = 0;
     public override void Initialize()
     {
-        if (ValueParser.ParseSettings(1) == 0){
+        if (ValueParser.ParseSettings(ValueParser.linePositionSettings.Sound) == 0){
             playSound = false;
         }
 
@@ -36,9 +36,9 @@ public class MoneyGet : GameObject
         icon.Origin = (Vector2f)texture.Size/2;
         icon.Scale *= iconscale;
 
-        value = ValueParser.ParseGameState(2);
-        ValueParser.WriteGamestate(1, ValueParser.ParseGameState(1) + (int)value);
-        ValueParser.WriteGamestate(2, 0);
+        value = ValueParser.ParseGameState(ValueParser.linePositionGame.MoneyRecieved);
+        ValueParser.WriteGamestate(ValueParser.linePositionGame.Money, ValueParser.ParseGameState(ValueParser.linePositionGame.Money) + (int)value);
+        ValueParser.WriteGamestate(ValueParser.linePositionGame.MoneyRecieved, 0);
         value /= 100;
         speed = value;
     }

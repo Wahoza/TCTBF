@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -8,7 +9,7 @@ public class Player : GameObject
     private const int PLAYER_TILING_X = 3;
     private const int PLAYER_TILING_Y = 3;
 
-    private Sprite sprite;
+    private Sprite sprite = new();
 
     private float animationTime = 0;
     private float animationSpeed = 10;
@@ -24,46 +25,44 @@ public class Player : GameObject
     Left = 1,
     Right = 2
 }
-    
-    private Vector2f MoveVec;
     private float MoveScale = 50;
     private float MoveCooldown = 0;
-    public bool startmovement = false;
-    private float DeltaTime;
+    public bool started = false;
     public bool collided = false;
     public bool restart = false;
 
-    Fish CoughtFish;
+    Fish CoughtFish = null!;
     Vector2f textureSize;
     float scale = 3;
     float hitboxscale = 0.5f;
 
 
-    View view;
+    View view = new();
     float CameraX = 0;
     bool CameramoveX = true;
 
-    FishQTE qte;
+    FishQTE qte = new();
     bool qteActive;
     bool[] completed = new bool[2];
     private Vector2f returnPoint;
 
-    float MoveTimer;
+    float MoveValue;
     float weight;
 
-    Sprite splash;
+    Sprite splash = new();
     float splashAnimSpeed = 10;
     float SPLASH_TILING_X = 5;
     bool splashAnim = false;
     float splashAnimTime = 0;
+    float MoveTotal;
     public override void Initialize()
     {   
-        weight = 100 * ((float)ValueParser.ParseGameState(6)) ;
+        weight = 60 * ((float)ValueParser.ParseGameState(ValueParser.linePositionGame.Weight));
         
         move = new Vector2f(0, 0);
         CameraX = 0;
         CameramoveX = true;
-        startmovement = false;
+        started = false;
         collided = false;
         restart = false;
         qteActive = false;
@@ -90,9 +89,9 @@ public class Player : GameObject
         qte.Initialize();
         qteActive = false;
 
-        MoveTimer = ValueParser.ParseGameState(5) * 15;
+        MoveTotal = ValueParser.ParseGameState(ValueParser.linePositionGame.MoveTime) * 5;
 
-        CoughtFish = null;
+        CoughtFish = null!;
 
         Texture SplashTexture = AssetManager.Instance.Textures["Splash"];
         splash = new Sprite(SplashTexture);
@@ -112,33 +111,28 @@ public class Player : GameObject
         SplashUpdate(deltaTime);
         animationTime += deltaTime * animationSpeed;
         
-        if(MoveStarted() && !collided){
+        if(Started() && !collided){
             Move(deltaTime);
 
-        }else if (!completed[0] && collided){
+        }else if (qte.status == FishQTE.qteStatus.Ongoing && collided){
             if(collided && !qteActive){
                 PlaySound("Bite");
                 CoughtFish.SetPositon(sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2);
                 CoughtFish.SetRotation(GetHookPosition()-sprite.Position);
             }
-            
+
             qteActive = true;
             qte.SetPositon(sprite.Position);
             qte.Update(deltaTime);
             currentAnimation = AnimationType.Down;
 
-            if(qte.GetStatus() == 0){
-                completed = new bool[] {true, false};  
-                CoughtFish = null;
-            }else if(qte.GetStatus() == 1){
-                completed = new bool[] {true, true};
-            }else if(qte.GetStatus() == 2){
-                completed = new bool[] {false, false};
+            if(qte.status == FishQTE.qteStatus.Failed){
+                CoughtFish = null!;
             }
 
         }else{
             qteActive = false;
-            if(completed[0]){
+            if(qte.status != FishQTE.qteStatus.Ongoing){
                 if(Utils.Distance(sprite.Position, returnPoint) > 20){
                     sprite.Position += (returnPoint -sprite.Position).Normalize() * 1000 * deltaTime;
                     currentAnimation = AnimationType.Down;
@@ -148,9 +142,9 @@ public class Player : GameObject
 
                     if(CoughtFish != null){
                         int value = (int)(CoughtFish.GetValue()*20);
-                        ValueParser.WriteGamestate(2, value);
+                        ValueParser.WriteGamestate(ValueParser.linePositionGame.MoneyRecieved, value);
                     }else{
-                        ValueParser.WriteGamestate(2, 0);
+                        ValueParser.WriteGamestate(ValueParser.linePositionGame.MoneyRecieved, 0);
                     }
                 }
             }
@@ -167,7 +161,7 @@ public class Player : GameObject
             sprite.TextureRect.Width,
             sprite.TextureRect.Height
         );
-        if(CoughtFish!=null && completed[1]){
+        if(CoughtFish!=null && qte.status == FishQTE.qteStatus.Completed){
 
             if(CoughtFish is BiggestFish b){
                 b.Update(deltaTime);
@@ -183,52 +177,53 @@ public class Player : GameObject
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
     }
-    private bool MoveStarted(){
+    private bool Started(){
 
-        if(!(startmovement) && InputManager.Instance.GetKeyPressed(Keyboard.Key.Space)){
-            startmovement = true;
+        if(!started && InputManager.Instance.GetKeyPressed(Keyboard.Key.Space)){
+            started = true;
             move = new Vector2f(10, -8) * MoveScale;
         }
-        return startmovement;
+        return started;
     }
 
     private void Move(float dt){
-        MoveTimer -= dt;
-        if(MoveTimer >= 0){
+        if(MoveTotal > 0){
 
             if(MoveCooldown <= 0 && sprite.Position.Y >= 100){
                 if(InputManager.Instance.GetKeyDown(Keyboard.Key.A)){
                     move = new Vector2f(-4, -2) * MoveScale;
                     MoveCooldown = (float)0.5;
-                    currentAnimation = AnimationType.Left;            
+                    currentAnimation = AnimationType.Left;
+                    MoveValue = 1;
                     }
                 if(InputManager.Instance.GetKeyDown(Keyboard.Key.D)){
                     move = new Vector2f(4, -2) * MoveScale;
                     MoveCooldown = (float)0.5;
-                    currentAnimation = AnimationType.Right; 
+                    currentAnimation = AnimationType.Right;
+                    MoveValue = 1;
                 }
                 if(InputManager.Instance.GetKeyDown(Keyboard.Key.S)){
                     move = new Vector2f(0, -5) * MoveScale;
                     MoveCooldown = (float)0.5;
-                    currentAnimation = AnimationType.Down; 
+                    currentAnimation = AnimationType.Down;
+                    MoveValue = 1;
                 }
-
             }else{
                 MoveCooldown -= dt;
+                MoveValue = 0;
             }
+
+            if(Math.Abs(move.X)<= 1){
+                currentAnimation = AnimationType.Down;
+            }
+            MoveTotal -= MoveValue;
         }
         CheckCameraCollision();
 
-        if(move.X == 0){
-            //do nothing, but skip other checks
-            currentAnimation = AnimationType.Down;
-
-        }else if((int)move.X < 0){
+        if(move.X < 0){
             move += new Vector2f(1, 0) * dt * MoveScale * 2;
-        }else if ((int)move.X>0){
+        }else if (move.X>0){
             move += new Vector2f(-1, 0) * dt * MoveScale * 4;
-        }else{
-            move.X = 0;
         }
 
         if((int)move.Y <= 0){
@@ -270,19 +265,19 @@ public class Player : GameObject
             CameramoveX = false;
         }
 
-        if(!completed[0] && !qteActive){
+        if(qte.status == FishQTE.qteStatus.Ongoing && !qteActive){
             view.Center = new Vector2f(CameraX, sprite.Position.Y);
         }else{
             view.Center = sprite.Position;
         }
         window.SetView(view);
 
-        if(!((completed[1] && completed[0])||qteActive)){
+        if((qte.status == FishQTE.qteStatus.Ongoing && !qteActive)||qte.status == FishQTE.qteStatus.Failed){
 
             window.Draw(sprite);
         }
     
-        if(collided && !completed[0]){
+        if(collided && qte.status == FishQTE.qteStatus.Ongoing){
             qte.Draw(window);
         }
 
@@ -298,27 +293,26 @@ public class Player : GameObject
 
         float EmptySpaceComp = 1.7f;
         Vector2f pos = sprite.Position - (textureSize * scale / 2)/EmptySpaceComp + new Vector2f(0, weight / 100);
-        if(currentAnimation == AnimationType.Left){
-            return pos;
-        }
-        else if (currentAnimation == AnimationType.Right){
-            return new Vector2f (pos.X + textureSize.X * scale/EmptySpaceComp, pos.Y);
-        }
-        else{
-            return new Vector2f (pos.X + textureSize.X/2 * scale/EmptySpaceComp, pos.Y);
-        }
+        return (currentAnimation == AnimationType.Left)
+            ? pos
+            : (currentAnimation == AnimationType.Right)
+                ? new Vector2f(pos.X + textureSize.X * scale / EmptySpaceComp, pos.Y)
+                : new Vector2f(pos.X + textureSize.X / 2 * scale / EmptySpaceComp, pos.Y);
     }
-    public bool[] GetCompleted(){
-        return completed;
+    public FishQTE.qteStatus GetCompleted(){
+        return qte.status;
     }
     public bool GetQTEstatus(){
         return qteActive;
     }
-    public void SetReturnPoint(Vector2f _returnPoint){
-        returnPoint = _returnPoint;
+    public void SetReturnPoint(Vector2f origin){
+        returnPoint = origin;
     }
-    public float GetMoveTimer(){
-        return MoveTimer;
+    public float GetMoveAmount(){
+        return MoveValue;
+    }
+    public float GetInitialMoveAmount(){
+        return MoveTotal;
     }
     public void SetCoughtFish(Fish fish){
         CoughtFish = fish;
@@ -328,11 +322,11 @@ public class Player : GameObject
         if(sprite.Position.Y >= 25 && sprite.Position.Y <= 30 && !splashAnim){
             splash.Position = sprite.Position;
             splashAnim = true;
-            if(!completed[0]){
+            if(qte.status == FishQTE.qteStatus.Ongoing){
                 PlaySound("Splash");
             }
-            
         }
+
         if(splashAnim){
             splashAnimTime += deltaTime * splashAnimSpeed;
             int SplashOffsetX = (int)(splashAnimTime % SPLASH_TILING_X);
@@ -355,7 +349,7 @@ public class Player : GameObject
     }
 
     private void PlaySound(string SoundName){
-        if(ValueParser.ParseSettings(1) != 0){
+        if(ValueParser.ParseSettings(ValueParser.linePositionSettings.Sound) != 0){
             SoundBuffer buffer  = AssetManager.Instance.SoundBuffers[SoundName];
             Sound sound = new(buffer);
             sound.Play();

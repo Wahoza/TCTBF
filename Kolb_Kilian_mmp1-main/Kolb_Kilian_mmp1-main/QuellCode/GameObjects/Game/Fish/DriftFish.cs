@@ -1,10 +1,11 @@
+//Author: Kilian Kolb
 //This Fish will Lock Target once and move quickly in that direction
 using SFML.Graphics;
 using SFML.System;
 
 public class DriftFish : Fish
 {
-    private Sprite sprite;
+    private Sprite sprite = new();
     private Vector2f movevec = new Vector2f(0, 0);
     FloatRect CollisionBox;
     private float scale = 7;
@@ -16,7 +17,6 @@ public class DriftFish : Fish
     Vector2f TargetPosition;
     bool initialFind = true;
     float FISH_TILING_X = 3;
-    float FISH_TILING_Y = 1;
     float animationTime = 0;
     float animationSpeed = 10;
     float value = 0;
@@ -36,9 +36,9 @@ public class DriftFish : Fish
             sprite.TextureRect = new IntRect(
             0, 0,
             (int)(texture.Size.X / FISH_TILING_X),
-            (int)(texture.Size.Y / FISH_TILING_Y)
+            (int)(texture.Size.Y)
         );
-        textureSize = new Vector2f(sprite.Texture.Size.X/FISH_TILING_X, sprite.Texture.Size.Y/FISH_TILING_Y);
+        textureSize = new Vector2f(sprite.Texture.Size.X/FISH_TILING_X, sprite.Texture.Size.Y);
 
         Random random = new Random();
         scale =  random.Next(30, 60)/10;
@@ -89,7 +89,7 @@ public class DriftFish : Fish
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
         
         if(value == 0){
-            value = 2 + scale + position.Y/20;
+            value = scale + position.Y/17;
         }
     }
     private void CalculateMovevec(float deltaTime){

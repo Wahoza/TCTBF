@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -5,7 +6,7 @@ using SFML.Window;
 public class HudButton
 {
     bool pressed;
-    Sprite buttonSprite;
+    Sprite buttonSprite = new();
     float BUTTON_TILING_X = 2;
     FloatRect CollisionBox;
     Vector2f textureSize;
@@ -69,7 +70,7 @@ public class HudButton
     }
     private void PlaySound()
     {
-        if(ValueParser.ParseSettings(1) == 1){
+        if(ValueParser.ParseSettings(ValueParser.linePositionSettings.Sound) == 1){
             SoundBuffer buffer = AssetManager.Instance.SoundBuffers["Click"];
             Sound sound  = new(buffer);
             sound.Play();

@@ -1,15 +1,16 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
 public class ShopButton : GameObject
 {
-    Sprite sprite;
+    Sprite sprite = new();
     int BUTTON_TILING_X = 3;
     FloatRect CollisionBox;
     float scale = 5;
     float hitboxscale = 1;
-    int ParseLocation = 0;
+    ValueParser.linePositionGame ParseLocation;
     enum ButtonStatus
     {
         normal = 0,
@@ -49,7 +50,7 @@ public class ShopButton : GameObject
     }
     public void ButtonClick(FloatRect mouse)
     {   
-        if(ValueParser.ParseGameState(1)/100 < value || ValueParser.ParseGameState(ParseLocation) == 6){
+        if(ValueParser.ParseGameState(ValueParser.linePositionGame.Money)/100 < value || ValueParser.ParseGameState(ParseLocation) == 6){
             status = ButtonStatus.unavadible;
         }else{
             status = ButtonStatus.normal;
@@ -66,7 +67,7 @@ public class ShopButton : GameObject
 
                 if(InputManager.Instance.GetMouseUp(Mouse.Button.Left)){
                    ValueParser.WriteGamestate(ParseLocation, ValueParser.ParseGameState(ParseLocation) + 1);
-                   ValueParser.WriteGamestate(1, ValueParser.ParseGameState(1) - value*100);
+                   ValueParser.WriteGamestate(ValueParser.linePositionGame.Money, ValueParser.ParseGameState(ValueParser.linePositionGame.Money) - value*100);
                    PlaySound();
                 }
             }
@@ -111,7 +112,7 @@ public class ShopButton : GameObject
         Cost.DisplayedString = "" + _value;
         value = _value;
     }
-    public void SetParseLocation(int _ParseLocation){
+    public void SetParseLocation(ValueParser.linePositionGame _ParseLocation){
         ParseLocation = _ParseLocation;
     }
     public void SetMousePos(FloatRect _MousePos){
@@ -119,7 +120,7 @@ public class ShopButton : GameObject
     }
     private void PlaySound()
     {
-        if(ValueParser.ParseSettings(1) == 1){
+        if(ValueParser.ParseSettings(ValueParser.linePositionSettings.Sound) == 1){
             SoundBuffer buffer = AssetManager.Instance.SoundBuffers["Click"];
             Sound sound  = new(buffer);
             sound.Play();

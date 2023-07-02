@@ -1,10 +1,11 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Window;
 using SFML.Audio;
 
 public class AssetManager
 {
-    private static AssetManager instance;
+    private static AssetManager instance = null!;
 
     public static AssetManager Instance
     {

@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -5,21 +6,17 @@ using SFML.Window;
 public class SettingsButton
 {
     bool pressed;
-    Sprite buttonSprite;
+    Sprite buttonSprite = new();
     float BUTTON_TILING_X = 2;
     FloatRect CollisionBox;
     Vector2f textureSize;
     float scale;
-    int parseLocation;
-    public void Initialize(string FileName, float _scale, Vector2f pos, int ParseLocation){
+    ValueParser.linePositionSettings parseLocation;
+    public void Initialize(string FileName, float _scale, Vector2f pos, ValueParser.linePositionSettings ParseLocation){
 
         parseLocation = ParseLocation;
 
-        if(ValueParser.ParseSettings(ParseLocation) == 1){
-            pressed = true;
-        }else{
-            pressed = false;
-        }
+        pressed = ValueParser.ParseSettings(ParseLocation) == 1;
 
         Texture texture = AssetManager.Instance.Textures[FileName];
         buttonSprite = new Sprite(texture);
@@ -78,7 +75,7 @@ public class SettingsButton
     }
     private void PlaySound()
     {
-        if(ValueParser.ParseSettings(1) == 1){
+        if(ValueParser.ParseSettings(ValueParser.linePositionSettings.Sound) == 1){
             SoundBuffer buffer = AssetManager.Instance.SoundBuffers["Click"];
             Sound sound  = new(buffer);
             sound.Play();

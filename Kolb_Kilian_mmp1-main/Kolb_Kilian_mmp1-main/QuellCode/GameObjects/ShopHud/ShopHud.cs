@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -11,20 +12,20 @@ public class ShopHud : GameObject
     public override void Initialize()
     {
         ShopItem VisionUpgrade = new ShopItem();
-        VisionUpgrade.Initialize("UpgradeVision", 5, 3);
+        VisionUpgrade.Initialize("UpgradeVision", 5, ValueParser.linePositionGame.Vision);
         ShopSlots.Add(VisionUpgrade);
         
         ShopItem BaitUpgrade = new ShopItem();
-        BaitUpgrade.Initialize("UpgradeBait", 10, 4);
+        BaitUpgrade.Initialize("UpgradeBait", 10, ValueParser.linePositionGame.Bait);
         ShopSlots.Add(BaitUpgrade);
 
         ShopItem TimeUpgrade = new ShopItem();
-        TimeUpgrade.Initialize("UpgradeMove", 7, 5);
+        TimeUpgrade.Initialize("UpgradeMove", 7, ValueParser.linePositionGame.MoveTime);
         ShopSlots.Add(TimeUpgrade);
 
         //makes game lag
         ShopItem WeightUpgrade = new ShopItem();
-        WeightUpgrade.Initialize("UpgradeWeight", 6, 6);
+        WeightUpgrade.Initialize("UpgradeWeight", 6, ValueParser.linePositionGame.Weight);
         ShopSlots.Add(WeightUpgrade);
 
         moneyHud.Initialize();

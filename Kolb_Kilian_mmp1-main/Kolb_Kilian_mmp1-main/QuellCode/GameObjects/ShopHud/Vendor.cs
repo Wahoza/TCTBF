@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -12,9 +13,7 @@ public class Vendor : GameObject
     }
     bool StartPhase;
     Vendorstate state;
-    ShopHud shopHud;
-    Sprite Information;
-
+    ShopHud shopHud = new();
 
     HudButton ShopButton = new();
     HudButton InformationButton = new HudButton();
@@ -24,8 +23,8 @@ public class Vendor : GameObject
     SettingsButton MusicButton = new();
 
     FloatRect mouse;
-    Sprite information;
-    Sprite VendorSprite;
+    Sprite information = new();
+    Sprite VendorSprite = new();
     float VENDOR_TILING_X = 5;
     float scale = 4;
     float animationTime = 0;
@@ -42,8 +41,8 @@ public class Vendor : GameObject
 
 
         ExitButton.Initialize("CloseButton", 3 , new Vector2f(-900, -500));
-        SoundButton.Initialize("SoundButton", 3, new Vector2f(-850, -500), 1);
-        MusicButton.Initialize("MusicButton", 3, new Vector2f(-800, -500), 0);
+        SoundButton.Initialize("SoundButton", 3, new Vector2f(-850, -500), ValueParser.linePositionSettings.Sound);
+        MusicButton.Initialize("MusicButton", 3, new Vector2f(-800, -500), ValueParser.linePositionSettings.Music);
 
         Texture VendorTexture = AssetManager.Instance.Textures["shop"];
         VendorSprite = new Sprite(VendorTexture);

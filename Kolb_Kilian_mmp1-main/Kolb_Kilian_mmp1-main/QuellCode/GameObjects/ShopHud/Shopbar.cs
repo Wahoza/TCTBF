@@ -1,12 +1,13 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
 
 public class ShopBar : GameObject{
-    Sprite sprite;
+    Sprite sprite = new();
     int upgradeTiling = 6;
-    int ParseLocation;
+    ValueParser.linePositionGame ParseLocation;
     float scale = 3;
     public override void Initialize()
     {
@@ -43,7 +44,7 @@ public class ShopBar : GameObject{
     public void SetPosition(Vector2f pos){
         sprite.Position = pos;
     }
-    public void SetParseLocation(int _ParseLocation){
+    public void SetParseLocation(ValueParser.linePositionGame _ParseLocation){
         ParseLocation = _ParseLocation;
     }
 }

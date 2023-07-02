@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -5,9 +6,9 @@ using SFML.Window;
 
 public class BubbleManager : GameObject
 {
-    List<Bubble> BubbleList;
-    List<Fish> FishList;
-    Random random;
+    List<Bubble> BubbleList = new List<Bubble>();
+    List<Fish> FishList = new List<Fish>();
+    Random random = new();
     public override void Initialize()
     {
         BubbleList = new List<Bubble>();
@@ -17,16 +18,8 @@ public class BubbleManager : GameObject
     {
         foreach(Fish fish in FishList){
             random = new Random();
-            if(fish is FishGroup fishGroup){
-                foreach(SubFish subFish in fishGroup.Group){
-                    if(random.Next(1, 1000) > 995){
-                    Bubble bubble = new Bubble();
-                    bubble.Initialize();
-                    bubble.SetPositon(fish.GetPosition());
-                    BubbleList.Add(bubble);
-                    }
-                }
-            }else if(random.Next(1, 1000) > 995){
+            
+            if(random.Next(1, 1000) > 995){
                 Bubble bubble = new Bubble();
                 bubble.Initialize();
                 bubble.SetPositon(fish.GetPosition());

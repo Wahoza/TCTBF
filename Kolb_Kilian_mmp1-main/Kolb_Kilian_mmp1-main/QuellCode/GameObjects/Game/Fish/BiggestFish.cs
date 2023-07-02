@@ -1,11 +1,11 @@
+//Author: Kilian Kolb
 //this is a long fish; it just swims twoards the player
 using SFML.Graphics;
 using SFML.System;
 
 public class BiggestFish : Fish
 {
-    private Sprite printer;
-    private bool locked = false;
+    private Sprite printer = new();
     private Vector2f movevec;
     FloatRect CollisionBox;
     private float scale = 5;
@@ -37,7 +37,7 @@ public class BiggestFish : Fish
         textureSize = new Vector2f(printer.Texture.Size.X/FISH_TILING_X, printer.Texture.Size.Y/FISH_TILING_Y);
 
         Random random = new Random();
-        scale =  random.Next(40, 100)/10;
+        scale =  random.Next(70, 100)/10;
         speed = 300/scale;
         printer.Scale *= scale;
 

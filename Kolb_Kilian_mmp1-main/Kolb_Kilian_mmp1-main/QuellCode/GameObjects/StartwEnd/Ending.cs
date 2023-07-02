@@ -1,12 +1,11 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
 using SFML.Window;
 public class Ending : GameObject
 {
-    Sprite sprite;
-    float animationTime = 0;
-    float animationSpeed = 2;
+    Sprite sprite = new();
     Vector2f area;
     Vector2f rectpos;
     HudButton ExitButton = new();

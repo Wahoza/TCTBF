@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -6,7 +7,7 @@ using SFML.Window;
 public class MoneyHud : GameObject
 {
     Text MoneyText = new Text();
-    Sprite icon;
+    Sprite icon = new();
     float iconscale = 3;
     public override void Initialize()
     {
@@ -26,7 +27,7 @@ public class MoneyHud : GameObject
 
     public override void Update(float deltaTime)
     {
-        MoneyText.DisplayedString = "" + ValueParser.ParseGameState(1)/100;
+        MoneyText.DisplayedString = "" + ValueParser.ParseGameState(ValueParser.linePositionGame.Money)/100;
     }
     public override void Draw(RenderWindow window)
     {

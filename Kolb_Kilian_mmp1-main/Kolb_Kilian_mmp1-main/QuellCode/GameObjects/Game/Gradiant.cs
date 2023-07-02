@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -5,9 +6,10 @@ using SFML.Window;
 
 public class Gradiant : GameObject
 {
-    private Sprite? gradiant;
+    private Sprite gradiant = new();
     float intensity = 100;
     Vector2f area;
+    float InitIntensity = 75;
     public override void Initialize()
     {
         Texture texture =  AssetManager.Instance.Textures["Gradiant"];
@@ -21,11 +23,9 @@ public class Gradiant : GameObject
 
     public override void Update(float deltaTime)
     {
-        if(gradiant.Position.Y < -30){
-            gradiant.Scale = new Vector2f(area.X, area.X);
-        }else{
-            gradiant.Scale = new Vector2f(area.X,area.X) / (intensity * gradiant.Position.Y/1000);
-        }
+        gradiant.Scale = (gradiant.Position.Y < -30)
+            ? new Vector2f(area.X, area.X)
+            : new Vector2f(area.X, area.X) / (intensity * gradiant.Position.Y / 1000);
     }
 
     public override void Draw(RenderWindow window)
@@ -42,11 +42,11 @@ public class Gradiant : GameObject
         gradiant.Position = hook;
     }
     public void SetStats(Vector2f _area){
-        if(ValueParser.ParseGameState(3) != 0){
-            intensity = 50/ValueParser.ParseGameState(3);
+        if(ValueParser.ParseGameState(ValueParser.linePositionGame.Vision) != 0){
+            intensity = InitIntensity/ValueParser.ParseGameState(ValueParser.linePositionGame.Vision);
             area = _area;
         }else{
-            intensity = 75;
+            intensity = InitIntensity;
         }
 
     }

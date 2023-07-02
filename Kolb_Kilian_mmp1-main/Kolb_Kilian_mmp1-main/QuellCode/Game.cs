@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -9,16 +10,16 @@ public class Game
     private List<GameObject> shopObjects = new();
     private List<Fish> FishListParse = new();
     private float gameTime = 0;
-    Player player;
-    FishMouse fishMouse;
-    bool qteActive; 
+    Player player = new();
+    FishMouse fishMouse = new();
+    bool qteActive;
 
-    Music AboveWaterMusic;
-    Music UnderWaterMusic;
-    Music VictoryMusic;
-    int[] LastParsedMusicState = new int[3]{0, 0, 0};
-    
-    
+    Music AboveWaterMusic = null!;
+    Music UnderWaterMusic = null!;
+    Music VictoryMusic = null!;
+
+    //Compares new music state[0] to old music state [1], to avoid repeating music.Play(). [2]: currently active music
+    int[] MusicState = new int[3]{0, 0, 0};
     enum GameState{
         FirstLoad = 0,
         FishingPhase = 1,
@@ -30,7 +31,8 @@ public class Game
     {
         VideoMode mode = new VideoMode(1920, 1080);
         string title = "Fishing Game";
-        window = new RenderWindow(mode, title, Styles.None);
+
+        window = new RenderWindow(mode, title, Styles.Fullscreen);
 
         window.Closed += OnWindowClose;
         window.Resized += OnWindowResized;
@@ -48,10 +50,24 @@ public class Game
         window.Close();
     }
 
-    public void Run()
-    {
+    public void Run(){
         Initialize();
+        Clock clock = new Clock();
+        while(window.IsOpen){
+            if(gameState == GameState.FirstLoad){
+                HandleEvents();
 
+                float deltaTime = clock.Restart().AsSeconds();
+                OpeningUpdate(deltaTime);
+
+                Draw();
+            }else{
+                RunGame();
+            }
+        }
+    }
+    public void RunGame()
+    {
         Clock clock = new Clock();
 
         while (window.IsOpen)
@@ -69,106 +85,18 @@ public class Game
     private void Update(float deltaTime)
     {
         gameTime += deltaTime;
-        if(gameState == GameState.FirstLoad){
-            foreach(GameObject gameObject in gameObjects){
 
-                gameObject.Update(deltaTime);
-                
-                if(gameObject is Opening op){
-
-                    if(op.GetFinished()){
-
-                        gameState = GameState.ShoppigPhase;
-                        ValueParser.WriteGamestate(0, (int)gameState);
-                        ShopInitialize();
-                        break;
-                    }
-                }
-            }
+        if(gameState == GameState.FishingPhase){
+            GameUpdate(deltaTime);
         }
 
-
-        else if(!player.restart && gameState == GameState.FishingPhase){
-            if(!qteActive){
-            foreach (GameObject gameObject in gameObjects)
-            {
-                gameObject.Update(deltaTime);
-
-                    if(gameObject is FishManager FishMan){
-                        if(!player.collided){
-                            if(FishMan.CollisionTest(player.CollisionBox) != null){
-                                player.collided = true;
-                                player.SetCoughtFish(FishMan.CollisionTest(player.CollisionBox));
-                            }
-                        }
-
-                        FishMan.SpawnFish(player.startmovement, window.GetView().Size, window.GetView().Center);
-                        FishMan.MoveToGoal(player.GetPosition());
-                        FishListParse = FishMan.GetFish();
-                    }
-                    if(gameObject is Turtle turtle){
-                        turtle.SetEndPoint(player.GetHookPosition());
-                        player.SetReturnPoint(turtle.GetLineStart());
-                    }
-                    if(gameObject is Gradiant gradiant){
-                        gradiant.SetPositon(player.GetHookPosition());
-                    }
-                    if(gameObject is BubbleManager BubbleMan){
-                        BubbleMan.SetFish(FishListParse);
-                    }
-                    if(gameObject is Hud hud){
-                        hud.SetTimer(player.GetMoveTimer());
-                    }
-                }
-            }else{
-                player.Update(deltaTime);
-                foreach(GameObject o in gameObjects){
-                    if(o is Turtle t){
-                        t.Update(deltaTime);
-                    }
-                }
-            }
-
-            qteActive = player.GetQTEstatus();
-            
-        }else{
-    
-            if(ValueParser.ParseGameState(2)>10000000 && gameState != GameState.FinishPhase){
-                gameState = GameState.FinishPhase;
-
-                EndInitialize();
-                ValueParser.ResetGameState();
-
-
-            }else if(gameState != GameState.ShoppigPhase&& gameState != GameState.FinishPhase){
-                gameState = GameState.ShoppigPhase;
-                ShopInitialize();
-            }
-        }
-        if(gameState == GameState.ShoppigPhase && InputManager.Instance.GetKeyDown(Keyboard.Key.Space)){
-            gameState = GameState.FishingPhase;
-            GameInitialize();
-
-        }else if(gameState == GameState.ShoppigPhase){
-                foreach(GameObject gameObject in gameObjects){
-                    
-                    if(gameObject is Vendor shop){
-                        shop.getMousePosition(fishMouse.GetMouseRect());
-                    }
-
-                    gameObject.Update(deltaTime);
-                }
+        if(gameState == GameState.ShoppigPhase){
+            ShopUpdate(deltaTime);
         }
         if (gameState == GameState.FinishPhase){
-            foreach(GameObject o in gameObjects){
-                o.Update(deltaTime);
-                if(o is Ending end){
-                    end.getMousePosition(fishMouse.GetMouseRect());
-                }
-            }
+            EndingUpdate(deltaTime);
         }
 
-        
         HandleMusic();
 
         InputManager.Instance.Update(deltaTime);
@@ -185,28 +113,122 @@ public class Game
 
         window.Display();
     }
+    private void OpeningUpdate(float deltaTime){
+        foreach(GameObject gameObject in gameObjects){
+
+            gameObject.Update(deltaTime);
+
+            if (gameObject is Opening op && op.GetFinished())
+            {
+                gameState = GameState.ShoppigPhase;
+                ValueParser.WriteGamestate(0, (int)gameState);
+                ShopInitialize();
+                break;
+            }
+        }
+    }
+    
+    private void GameUpdate(float deltaTime){
+        if(!qteActive){
+            foreach (GameObject gameObject in gameObjects)
+            {
+                gameObject.Update(deltaTime);
+                    switch(gameObject){
+
+                        case FishManager fm:
+                            if (!player.collided && fm.CollisionTest(player.CollisionBox) != null)
+                            {
+                                player.collided = true;
+                                player.SetCoughtFish(fm.CollisionTest(player.CollisionBox));
+                            }
+
+                            fm.SpawnFish(player.started, window.GetView().Size, window.GetView().Center);
+                            fm.MoveToGoal(player.GetPosition());
+                            FishListParse = fm.GetFish();
+                        break;
+
+                        case Turtle turtle:
+                            turtle.SetEndPoint(player.GetHookPosition());
+                        break;
+
+                        case Gradiant gradiant:
+                            gradiant.SetPositon(player.GetHookPosition());
+                        break;
+
+                        case BubbleManager bubbleManager:
+                            bubbleManager.SetFish(FishListParse);
+                        break;
+
+                        case Hud hud:
+                            hud.SetMoveAmount(player.GetMoveAmount());
+                        break;
+                    }
+                }
+            }else{
+                player.Update(deltaTime);
+                foreach(GameObject o in gameObjects){
+                    if(o is Turtle t){
+                        t.Update(deltaTime);
+                    }
+                }
+            }
+
+            qteActive = player.GetQTEstatus();
+
+            if(player.restart){
+                if(ValueParser.ParseGameState(ValueParser.linePositionGame.MoneyRecieved)>10000000){
+                    gameState = GameState.FinishPhase;
+                    EndInitialize();
+
+                }else{
+                    gameState = GameState.ShoppigPhase;
+                    ShopInitialize();
+                }
+            }
+    }
+    private void ShopUpdate(float deltaTime){
+        foreach(GameObject gameObject in gameObjects){
+            if(gameObject is Vendor shop){
+                shop.getMousePosition(fishMouse.GetMouseRect());
+            }
+            gameObject.Update(deltaTime);
+        }
+
+        if(InputManager.Instance.GetKeyDown(Keyboard.Key.Space)){
+            gameState = GameState.FishingPhase;
+            GameInitialize();
+        }
+    }
+    private void EndingUpdate(float deltaTime){
+        foreach(GameObject o in gameObjects){
+            o.Update(deltaTime);
+            if(o is Ending end){
+                end.getMousePosition(fishMouse.GetMouseRect());
+            }
+        }
+    }
 
     private void HandleMusic(){
         if(gameState != GameState.FinishPhase){
-        LastParsedMusicState[1] = LastParsedMusicState[0];
-        LastParsedMusicState[0] = ValueParser.ParseSettings(0);
+        MusicState[1] = MusicState[0];
+        MusicState[0] = ValueParser.ParseSettings(0);
 
         float Height = window.GetView().Center.Y;
 
-        if(Height > 30 && LastParsedMusicState[2] == 0){
-            LastParsedMusicState[2] = 1;
-            if(LastParsedMusicState[0] == 1){
-                    AboveWaterMusic.Stop();
+        if(Height > 30 && MusicState[2] == 0){
+            MusicState[2] = 1;
+            if(MusicState[0] == 1){
+                AboveWaterMusic.Stop();
 
-                    UnderWaterMusic.PlayingOffset = AboveWaterMusic.PlayingOffset;
-                    UnderWaterMusic.Play();
-                    UnderWaterMusic.Loop = true;
+                UnderWaterMusic.PlayingOffset = AboveWaterMusic.PlayingOffset;
+                UnderWaterMusic.Play();
+                UnderWaterMusic.Loop = true;
             }
 
-        }else if (Height <= 30 && LastParsedMusicState[2] == 1){
-            LastParsedMusicState[2] = 0;
+        }else if (Height <= 30 && MusicState[2] == 1){
+            MusicState[2] = 0;
 
-            if(LastParsedMusicState[0] == 1){
+            if(MusicState[0] == 1){
                 UnderWaterMusic.Pause();
                 AboveWaterMusic.PlayingOffset = UnderWaterMusic.PlayingOffset;
                 AboveWaterMusic.Play();
@@ -214,8 +236,8 @@ public class Game
             }
         }
 
-        if(LastParsedMusicState[0] != LastParsedMusicState[1]){
-            if(LastParsedMusicState[0] == 1){
+        if(MusicState[0] != MusicState[1]){
+            if(MusicState[0] == 1){
                 AboveWaterMusic.Play();
                 AboveWaterMusic.Loop = true;
             }else{
@@ -224,13 +246,13 @@ public class Game
             }
         }
 
-        if((Math.Sqrt(Math.Abs(Height-29))/30 >1)){
+        if(Math.Sqrt(Math.Abs(Height-29))/30 >1){
             UnderWaterMusic.Volume = (int)(100 / (Math.Sqrt(Math.Abs(Height-29)) /30));
         }
 
         }else{
-            if(LastParsedMusicState[2] != 2 && ValueParser.ParseSettings(0) == 1 ){
-                LastParsedMusicState[2] = 2;
+            if(MusicState[2] != 2 && ValueParser.ParseSettings(0) == 1 ){
+                MusicState[2] = 2;
                 VictoryMusic.Play();
             }
         }
@@ -316,10 +338,12 @@ public class Game
         turtle.Initialize();
         turtle.SetPositon(new Vector2f(0, -40));
         turtle.SetEndPoint(player.GetHookPosition());
+        player.SetReturnPoint(turtle.GetLineStart());
         gameObjects.Add(turtle);
 
         Hud hud = new Hud();
         hud.Initialize();
+        hud.SetInitialMoveAmount(player.GetInitialMoveAmount());
         gameObjects.Add(hud);
 
         qteActive = false;
@@ -395,8 +419,6 @@ public class Game
 
         fishMouse.Initialize();
         fishMouse.SetFishMouseArea(view.Size);
-        gameObjects.Add(fishMouse);   
+        gameObjects.Add(fishMouse);
     }
-    
-
 }

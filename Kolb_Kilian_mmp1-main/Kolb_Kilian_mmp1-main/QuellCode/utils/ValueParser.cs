@@ -1,9 +1,24 @@
+//Author: Kilian Kolb
 using System;
 using System.IO;
 
 public static class ValueParser
 {
-    public static int ParseGameState(int linePosition){
+    public enum linePositionGame{
+        GameState = 0,
+        Money = 1,
+        MoneyRecieved = 2,
+        Vision = 3,
+        Bait = 4,
+        MoveTime = 5,
+        Weight = 6
+    }
+    public enum linePositionSettings{
+        Music = 0,
+        Sound = 1
+    }
+
+    public static int ParseGameState(linePositionGame LinePos){
         //line Position: 0 == Gamestate (0 == Firstload, 2 == Shopping State, 3 == Finished, but Freeplay)
         //               1 == Money currently avadible to Player
         //               2 == Value of the Last Fish (for cool animation)
@@ -14,12 +29,12 @@ public static class ValueParser
         //           !!!NOTE: ALWAYS RESET UPGRADE STATS TO 1!!!
         string filePath = "Utils/ParsedData/ParsedGame.txt";
 
-        return Read(filePath, linePosition);
+        return Read(filePath, (int)LinePos);
     }
 
-    public static void WriteGamestate(int location, int value){
+    public static void WriteGamestate(linePositionGame LinePos, int value){
         string filePath = "Utils/ParsedData/ParsedGame.txt";
-        Write(filePath, location, value);
+        Write(filePath, (int)LinePos, value);
     }
 
     public static void ResetGameState(){
@@ -27,16 +42,16 @@ public static class ValueParser
         string[] resetvalues = {"0","0","0","1","1","1","1"};
         File.WriteAllLines(filePath, resetvalues);
     }
-    public static int ParseSettings(int location){
+    public static int ParseSettings(linePositionSettings LinePos){
         //line Position: 0 == Music State
         //               1 == Sound State
 
         string filePath = "Utils/ParsedData/ParsedSettings.txt";
-        return Read(filePath, location);
+        return Read(filePath, (int) LinePos);
     }
-    public static void WriteSettings(int location, int value){
+    public static void WriteSettings(linePositionSettings LinePos, int value){
         string filePath = "Utils/ParsedData/ParsedSettings.txt";
-        Write(filePath, location, value);
+        Write(filePath, (int)LinePos, value);
     }
     private static void Write(string filePath, int location, int value){
 

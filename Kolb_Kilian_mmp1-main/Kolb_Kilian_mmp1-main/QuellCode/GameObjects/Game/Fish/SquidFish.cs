@@ -1,10 +1,11 @@
+//Author: Kilian Kolb
 //This Fish will move in bursts twoards the hook
 using SFML.Graphics;
 using SFML.System;
 
 public class SquidFish : Fish
 {
-    private Sprite sprite;
+    private Sprite sprite = new();
     private bool locked = false;
     private Vector2f movevec;
     FloatRect CollisionBox;
@@ -16,7 +17,6 @@ public class SquidFish : Fish
     float animationTime = 0;
     float animationSpeed = 2;
     float FISH_TILING_X = 2;
-    float FISH_TILING_Y = 1;
     float value = 0;
     public override bool CollisionCheck(FloatRect player)
     {
@@ -34,9 +34,9 @@ public class SquidFish : Fish
             sprite.TextureRect = new IntRect(
             0, 0,
             (int)(texture.Size.X / FISH_TILING_X),
-            (int)(texture.Size.Y / FISH_TILING_Y)
+            (int)(texture.Size.Y)
         );
-        textureSize = new Vector2f(sprite.Texture.Size.X/FISH_TILING_X, sprite.Texture.Size.Y/FISH_TILING_Y);
+        textureSize = new Vector2f(sprite.Texture.Size.X/FISH_TILING_X, sprite.Texture.Size.Y);
 
         Random random = new Random();
         scale =  random.Next(40, 60)/10;
@@ -99,7 +99,7 @@ public class SquidFish : Fish
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
         if(value == 0){
-            value = 2 + scale + position.Y/20;
+            value = scale * 2 + position.Y/20;
         }
     }
     public override Vector2f GetPosition(){

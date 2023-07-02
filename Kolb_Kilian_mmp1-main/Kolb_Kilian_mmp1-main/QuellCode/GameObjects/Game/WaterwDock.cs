@@ -1,3 +1,4 @@
+//Author: Kilian Kolb
 using SFML.Graphics;
 using SFML.Audio;
 using SFML.System;
@@ -5,30 +6,21 @@ using SFML.Window;
 public class WaterwDock : GameObject
 {
     private const int WATER_TILING_X = 3;
-    private const int WATER_TILING_Y = 1;
 
-    private Sprite water;
-    private Sprite dock;
+    private Sprite water = new();
+    private Sprite dock = new();
     private float animationTime = 0;
     private float animationSpeed = 5;
-    private int[] frameCountPerAnimation = new int[1];
-    private AnimationType currentAnimation = AnimationType.Flow;
-    public enum AnimationType
-{
-    Flow = 0
-}
-    bool startmovement = false;
-    private float DeltaTime;
+    private int frameCount = 3;
     public override void Initialize()
     {
-        frameCountPerAnimation[0] = 3;
 
         Texture waterTexture = AssetManager.Instance.Textures["Water"];
         water = new Sprite(waterTexture);
         water.TextureRect = new IntRect(
             0, 0,
             (int)(waterTexture.Size.X / WATER_TILING_X),
-            (int)(waterTexture.Size.Y / WATER_TILING_Y)
+            (int)(waterTexture.Size.Y)
         );
         water.Scale *= (float) 5;
         water.Position = new Vector2f(0, 0);
@@ -40,9 +32,9 @@ public class WaterwDock : GameObject
 
     public override void Update(float deltaTime){
         animationTime += deltaTime * animationSpeed; 
-        int animationFrame = (int)animationTime % frameCountPerAnimation[(int)currentAnimation];
+        int animationFrame = (int)animationTime % frameCount;
         int waterOffsetX = animationFrame * water.TextureRect.Width;
-        int waterOffsetY = (int)currentAnimation * water.TextureRect.Height;   
+        int waterOffsetY = 0;
         water.TextureRect = new IntRect(
             waterOffsetX,
             waterOffsetY,
