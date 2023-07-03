@@ -176,7 +176,7 @@ public class Game
             qteActive = player.GetQTEstatus();
 
             if(player.restart){
-                if(ValueParser.ParseGameState(ValueParser.linePositionGame.MoneyRecieved)>10000000){
+                if(player.won){
                     gameState = GameState.FinishPhase;
                     EndInitialize();
 

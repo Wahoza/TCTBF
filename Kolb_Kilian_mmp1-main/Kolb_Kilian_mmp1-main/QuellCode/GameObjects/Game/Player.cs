@@ -55,6 +55,7 @@ public class Player : GameObject
     bool splashAnim = false;
     float splashAnimTime = 0;
     float MoveTotal;
+    public bool won = false;
     public override void Initialize()
     {   
         weight = 60 * ((float)ValueParser.ParseGameState(ValueParser.linePositionGame.Weight));
@@ -142,6 +143,9 @@ public class Player : GameObject
 
                     if(CoughtFish != null){
                         int value = (int)(CoughtFish.GetValue()*20);
+                        if(CoughtFish is BiggestFish){
+                            won = true;
+                        }
                         ValueParser.WriteGamestate(ValueParser.linePositionGame.MoneyRecieved, value);
                     }else{
                         ValueParser.WriteGamestate(ValueParser.linePositionGame.MoneyRecieved, 0);

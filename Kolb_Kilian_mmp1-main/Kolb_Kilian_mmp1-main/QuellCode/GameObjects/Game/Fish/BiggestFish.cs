@@ -50,7 +50,6 @@ public class BiggestFish : Fish
 
     public override void Update(float deltaTime)
     {
-        value = 1000000;
         for(int element = FishItems.Count()-1; element > 0; element--){
             FishItems[element] = FishItems[element - 1]; 
         }
@@ -124,6 +123,7 @@ public class BiggestFish : Fish
     }
     public override bool CollisionCheck(FloatRect player)
     {
+        value = 1000000;
         if(CollisionBox.Intersects(player)){
             return true;
         }
