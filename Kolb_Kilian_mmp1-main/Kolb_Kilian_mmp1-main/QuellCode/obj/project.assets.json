@@ -465,11 +465,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\QuellCode - Refactor\\mmp1.csproj",
+      "projectUniqueName": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\QuellCode\\mmp1.csproj",
       "projectName": "mmp1",
-      "projectPath": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\QuellCode - Refactor\\mmp1.csproj",
+      "projectPath": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\QuellCode\\mmp1.csproj",
       "packagesPath": "C:\\Users\\kilia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\QuellCode - Refactor\\obj\\",
+      "outputPath": "C:\\Users\\kilia\\OneDrive\\Desktop\\mmp1\\Kolb_Kilian_mmp1-main\\Kolb_Kilian_mmp1-main\\QuellCode\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kilia\\AppData\\Roaming\\NuGet\\NuGet.Config"
