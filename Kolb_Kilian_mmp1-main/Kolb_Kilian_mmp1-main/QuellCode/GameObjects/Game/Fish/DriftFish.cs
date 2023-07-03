@@ -5,7 +5,6 @@ using SFML.System;
 
 public class DriftFish : Fish
 {
-    private Sprite sprite = new();
     private Vector2f movevec = new Vector2f(0, 0);
     FloatRect CollisionBox;
     private float scale = 7;
@@ -19,7 +18,6 @@ public class DriftFish : Fish
     float FISH_TILING_X = 3;
     float animationTime = 0;
     float animationSpeed = 10;
-    float value = 0;
     public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
@@ -82,16 +80,6 @@ public class DriftFish : Fish
     {
         window.Draw(sprite);
     }
-    public override void SetPositon(Vector2f position)
-    {
-        sprite.Position = position;
-        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
-        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
-        
-        if(value == 0){
-            value = scale + position.Y/17;
-        }
-    }
     private void CalculateMovevec(float deltaTime){
         if(((Utils.AngleBetween(movevec, TargetPosition-sprite.Position) > 0.1) && initialFind)|| passedtime >wait * 100){
             initialFind = true;
@@ -115,21 +103,5 @@ public class DriftFish : Fish
             passedtime += deltaTime * 100;
         }
         
-    }
-    public override Vector2f GetPosition()
-    {
-        return sprite.Position;
-    }
-    public override void SetRotation(Vector2f Rotationvec)
-    {
-        sprite.Rotation = (float)(Utils.Angle(Rotationvec) * 360 / (2*Math.PI));
-    }
-    public override float GetScale()
-    {
-        return scale;
-    }
-    public override float GetValue()
-    {
-        return value / 3;
     }
 }

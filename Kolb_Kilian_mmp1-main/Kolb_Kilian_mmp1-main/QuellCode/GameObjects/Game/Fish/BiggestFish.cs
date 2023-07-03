@@ -18,10 +18,8 @@ public class BiggestFish : Fish
     float animationTime = 0;
     float animationSpeed = 10;
     int length = 500;
-    
-    float RotationNum = 0;
-
     float value;
+    float RotationNum = 0;
 
     public override void Initialize()
     {
@@ -52,6 +50,7 @@ public class BiggestFish : Fish
 
     public override void Update(float deltaTime)
     {
+        value = 1000000;
         for(int element = FishItems.Count()-1; element > 0; element--){
             FishItems[element] = FishItems[element - 1]; 
         }
@@ -119,13 +118,7 @@ public class BiggestFish : Fish
     {
         movevec = (player - FishItems[0]).Normalize();
     }
-
-    public override void SetPositon(Vector2f position)
-    {
-        FishItems[0] = position;
-        value = 100000000;
-    }
-    public override Vector2f GetPosition()
+    new public Vector2f GetPosition()
     {
         return FishItems[0];
     }
@@ -135,18 +128,5 @@ public class BiggestFish : Fish
             return true;
         }
         return false;
-    }
-
-    public override void SetRotation(Vector2f Rotationvec)
-    {
-        RotationNum = (float)(Utils.Angle(Rotationvec) * 360 / (2*Math.PI));
-    }
-    public override float GetScale()
-    {
-        return scale;
-    }
-    public override float GetValue()
-    {
-        return value;
     }
 }

@@ -2,7 +2,6 @@
 using SFML.Graphics;
 using SFML.System;
 
-
 //Generator for Many Subfishes, creating a cluster
 public class FishGroupCreator
 {

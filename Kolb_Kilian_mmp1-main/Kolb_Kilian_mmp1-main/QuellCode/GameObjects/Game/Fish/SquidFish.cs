@@ -5,7 +5,6 @@ using SFML.System;
 
 public class SquidFish : Fish
 {
-    private Sprite sprite = new();
     private bool locked = false;
     private Vector2f movevec;
     FloatRect CollisionBox;
@@ -17,7 +16,6 @@ public class SquidFish : Fish
     float animationTime = 0;
     float animationSpeed = 2;
     float FISH_TILING_X = 2;
-    float value = 0;
     public override bool CollisionCheck(FloatRect player)
     {
         if(CollisionBox.Intersects(player)){
@@ -90,32 +88,5 @@ public class SquidFish : Fish
     {
         window.Draw(sprite);
         
-    }
-
-    public override void SetPositon(Vector2f position)
-    {
-        sprite.Position = position;
-        CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
-        CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
-
-        if(value == 0){
-            value = scale * 2 + position.Y/20;
-        }
-    }
-    public override Vector2f GetPosition(){
-        return sprite.Position;
-    }
-    public override void SetRotation(Vector2f Rotationvec)
-    {
-        sprite.Rotation = (float)(Utils.Angle(Rotationvec) * 360 / (2*Math.PI));
-    }
-    public override float GetScale()
-    {
-        return scale;
-        
-    }
-    public override float GetValue()
-    {
-        return value / 3;
     }
 }
