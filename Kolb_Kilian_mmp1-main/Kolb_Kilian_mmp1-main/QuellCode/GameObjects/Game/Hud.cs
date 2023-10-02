@@ -18,6 +18,11 @@ public class Hud : GameObject
     Text TimeText = new();
     float DepthOffset = -414;
     float TextDistanceFromLeft = 80;
+
+    Sprite HeartSprites = new();
+    public int lives = 0;
+    float heartscale = 3;
+
     public override void Initialize(){
         Font font = AssetManager.Instance.Fonts["PixelFont"];
         DepthText.Font = font;
@@ -44,7 +49,10 @@ public class Hud : GameObject
         TimeText.OutlineThickness =3;
         TimeText.FillColor = Color.White;
         TimeText.Position = new Vector2f(0, 0);
-        
+
+        Texture heartTexture = new Texture(AssetManager.Instance.Textures["Heart"]);
+        HeartSprites = new Sprite(heartTexture);
+        HeartSprites.Scale *= heartscale;
     }
     public override void Update(float deltaTime)
     {
@@ -78,6 +86,11 @@ public class Hud : GameObject
         window.Draw(DepthText);
         window.Draw(TimeText);
         window.Draw(MoveDisable);
+
+        for (int i = 0; i < lives; i++){
+            HeartSprites.Position = window.GetView().Center - window.GetView().Size / 2 + DistanceFromEdge+new Vector2f((HeartSprites.TextureRect.Width * scale/2 -6) * i, 110);
+            window.Draw(HeartSprites);
+        }
     }
     public void SetMoveAmount(float _MoveAmount){
         MoveAmount += _MoveAmount;

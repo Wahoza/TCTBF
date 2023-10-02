@@ -32,6 +32,7 @@ public class Player : GameObject
     public bool restart = false;
 
     Fish CoughtFish = null!;
+    public Fish ToRemoveFish = null!;
     Vector2f textureSize;
     float scale = 3;
     float hitboxscale = 0.5f;
@@ -56,6 +57,7 @@ public class Player : GameObject
     float splashAnimTime = 0;
     float MoveTotal;
     public bool won = false;
+    int lives;
     public override void Initialize()
     {   
         weight = 60 * ((float)ValueParser.ParseGameState(ValueParser.linePositionGame.Weight));
@@ -105,6 +107,7 @@ public class Player : GameObject
         splash.Scale *= 4;
 
         sprite.Position = new Vector2f(0, 0);
+        lives = ValueParser.ParseGameState(ValueParser.linePositionGame.Lives)-1;
     }
 
     public override void Update(float deltaTime)
@@ -118,7 +121,9 @@ public class Player : GameObject
         }else if (qte.status == FishQTE.qteStatus.Ongoing && collided){
             if(collided && !qteActive){
                 PlaySound("Bite");
-                CoughtFish.SetPositon(sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2);
+                Vector2f pos = sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2;
+                CoughtFish.SetPosition(pos);
+                if(CoughtFish is BiggestFish f) f.SetPosition(pos);
                 CoughtFish.SetRotation(GetHookPosition()-sprite.Position);
             }
 
@@ -128,7 +133,18 @@ public class Player : GameObject
             currentAnimation = AnimationType.Down;
 
             if(qte.status == FishQTE.qteStatus.Failed){
+                ToRemoveFish = CoughtFish;
                 CoughtFish = null!;
+
+                if (lives > 0)
+                {
+                    collided = false;
+                    completed = new bool[] { false, false };
+                    qteActive = false;
+                    qte.Initialize();
+
+                    lives--;
+                }
             }
 
         }else{
@@ -140,7 +156,7 @@ public class Player : GameObject
 
                 }else{
                     restart = true;
-
+                    ValueParser.WriteGamestate(ValueParser.linePositionGame.Lives, (lives + 1));
                     if(CoughtFish != null){
                         int value = (int)(CoughtFish.GetValue()*20);
                         if(CoughtFish is BiggestFish){
@@ -170,8 +186,9 @@ public class Player : GameObject
             if(CoughtFish is BiggestFish b){
                 b.Update(deltaTime);
             }
-
-            CoughtFish.SetPositon(sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2);
+            Vector2f pos = sprite.Position + new Vector2f(0, sprite.TextureRect.Height).Normalize() * CoughtFish.GetScale()*2;
+            CoughtFish.SetPosition(pos);
+            if(CoughtFish is BiggestFish f) f.SetPosition(pos);
             CoughtFish.SetRotation(GetHookPosition()-sprite.Position);
 
         }
@@ -305,6 +322,9 @@ public class Player : GameObject
     }
     public FishQTE.qteStatus GetCompleted(){
         return qte.status;
+    }
+    public int GetRemainingLives(){
+        return lives;
     }
     public bool GetQTEstatus(){
         return qteActive;

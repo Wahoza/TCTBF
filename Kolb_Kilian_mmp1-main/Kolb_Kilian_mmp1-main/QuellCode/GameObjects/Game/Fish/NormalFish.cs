@@ -85,7 +85,7 @@ public class NormalFish : Fish
 
 
         if(sprite.Position.Y< 100){
-            SetPositon(new Vector2f(sprite.Position.X, 100));
+            SetPosition(new Vector2f(sprite.Position.X, 100));
         }
         CollisionBox.Left = sprite.Position.X - textureSize.X * 0.5f * scale * hitboxscale;
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;

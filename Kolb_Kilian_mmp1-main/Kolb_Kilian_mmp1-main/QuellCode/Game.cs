@@ -14,6 +14,8 @@ public class Game
     FishMouse fishMouse = new();
     bool qteActive;
 
+    bool PausedForQTE = false;
+
     Music AboveWaterMusic = null!;
     Music UnderWaterMusic = null!;
     Music VictoryMusic = null!;
@@ -129,13 +131,19 @@ public class Game
     }
     
     private void GameUpdate(float deltaTime){
+        qteActive = player.GetQTEstatus();
         if(!qteActive){
+
             foreach (GameObject gameObject in gameObjects)
             {
                 gameObject.Update(deltaTime);
                     switch(gameObject){
 
                         case FishManager fm:
+                            if(PausedForQTE){
+                                PausedForQTE = false;
+                                if(player.ToRemoveFish != null)fm.RemoveFish(player.ToRemoveFish);
+                            }
                             if (!player.collided && fm.CollisionTest(player.CollisionBox) != null)
                             {
                                 player.collided = true;
@@ -161,10 +169,12 @@ public class Game
 
                         case Hud hud:
                             hud.SetMoveAmount(player.GetMoveAmount());
+                            hud.lives = player.GetRemainingLives();
                         break;
                     }
                 }
             }else{
+                PausedForQTE = true;
                 player.Update(deltaTime);
                 foreach(GameObject o in gameObjects){
                     if(o is Turtle t){
@@ -172,8 +182,6 @@ public class Game
                     }
                 }
             }
-
-            qteActive = player.GetQTEstatus();
 
             if(player.restart){
                 if(player.won){
@@ -420,5 +428,7 @@ public class Game
         fishMouse.Initialize();
         fishMouse.SetFishMouseArea(view.Size);
         gameObjects.Add(fishMouse);
+
+        ValueParser.ResetGameState();
     }
 }

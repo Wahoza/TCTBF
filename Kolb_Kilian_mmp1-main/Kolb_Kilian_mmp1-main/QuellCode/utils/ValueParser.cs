@@ -11,7 +11,8 @@ public static class ValueParser
         Vision = 3,
         Bait = 4,
         MoveTime = 5,
-        Weight = 6
+        Weight = 6,
+        Lives = 7
     }
     public enum linePositionSettings{
         Music = 0,
@@ -26,6 +27,7 @@ public static class ValueParser
         //               4 == Upgrade of Bait (or weight tbd)
         //               5 == Upgrade of Time before movement stops
         //               6 == Weight (increased downward accell);
+        //               7 == Lives 
         //           !!!NOTE: ALWAYS RESET UPGRADE STATS TO 1!!!
         string filePath = "Utils/ParsedData/ParsedGame.txt";
 
@@ -39,7 +41,7 @@ public static class ValueParser
 
     public static void ResetGameState(){
         string filePath = "Utils/ParsedData/ParsedGame.txt";
-        string[] resetvalues = {"0","0","0","1","1","1","1"};
+        string[] resetvalues = {"0","0","0","1","1","1","1","1"};
         File.WriteAllLines(filePath, resetvalues);
     }
     public static int ParseSettings(linePositionSettings LinePos){
@@ -59,7 +61,7 @@ public static class ValueParser
 
            string[] lines = File.ReadAllLines(filePath);
             if(lines.Count() == 0){
-                lines = new string[]{"0", "0", "1", "1", "1", "1"};
+                lines = new string[]{"0", "0", "1", "1", "1", "1", "1", "1"};
                 File.WriteAllLines(filePath, lines);
             }
             if(location<lines.Count()){
@@ -81,7 +83,7 @@ public static class ValueParser
         try{
             string[] lines = File.ReadAllLines(filePath);
             if(lines.Count() == 0){
-                lines = new string[]{"0", "0", "0", "1", "1", "1", "1"};
+                lines = new string[]{"0", "0", "0", "1", "1", "1", "1", "1"};
                 File.WriteAllLines(filePath, lines);
                 return 0;
             }

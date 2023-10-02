@@ -15,7 +15,6 @@ public class SubFish : Fish
     float animationTime = 0;
     float animationSpeed = 10;
     float radius;
-    bool exists;
     Vector2f CenterOrigin = new Vector2f(0,0);
 
     public override void Initialize()
@@ -47,7 +46,6 @@ public class SubFish : Fish
 
         CollisionBox = new FloatRect(sprite.Position.X, sprite.Position.Y, textureSize.X * scale * hitboxscale, textureSize.Y *scale * hitboxscale);
         movevec = new Vector2f(1 - (random.Next(2,3) %2) * 2,0);
-        exists = false;
     }
     public override bool CollisionCheck(FloatRect player)
     {

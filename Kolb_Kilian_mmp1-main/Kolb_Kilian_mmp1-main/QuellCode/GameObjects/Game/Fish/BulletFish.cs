@@ -90,7 +90,7 @@ public class BulletFish : Fish
             speed = 1000;
         }
         if(sprite.Position.Y< 100){
-            SetPositon(new Vector2f(sprite.Position.X, 100));
+            SetPosition(new Vector2f(sprite.Position.X, 100));
         }
         if(Utils.Angle(movevec) >= Math.PI){
             sprite.Scale = new Vector2f(scale, -scale);

@@ -42,6 +42,7 @@ public class AssetManager
         LoadTexture("Bubbles","./Assets/FishSprites/Bubble.png");
         LoadTexture("Splash","./Assets/Other/Splash.png");
         LoadTexture("MoveEnabled", "./Assets/HudSprites/MoveDuration.png");
+        LoadTexture("Heart", "./Assets/HudSprites/heart.png");
 
         LoadTexture("Mouse", "./Assets/HudSprites/Mouse.png");
         LoadTexture("Button", "./Assets/HudSprites/Button.png");

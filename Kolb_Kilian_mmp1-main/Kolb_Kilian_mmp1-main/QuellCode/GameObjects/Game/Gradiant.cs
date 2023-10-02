@@ -25,7 +25,7 @@ public class Gradiant : GameObject
     {
         gradiant.Scale = (gradiant.Position.Y < -30)
             ? new Vector2f(area.X, area.X)
-            : new Vector2f(area.X, area.X) / (intensity * gradiant.Position.Y / 1000);
+            : new Vector2f(area.X, area.X) / (intensity * gradiant.Position.Y / 2000);
     }
 
     public override void Draw(RenderWindow window)

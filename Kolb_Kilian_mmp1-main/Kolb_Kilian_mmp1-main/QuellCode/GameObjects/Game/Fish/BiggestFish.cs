@@ -12,13 +12,11 @@ public class BiggestFish : Fish
     private float hitboxscale = 0.7f;
     Vector2f textureSize;
     List<Vector2f> FishItems = new List<Vector2f>(100);
-    float speed = 4;
+    float speed = 5;
     float FISH_TILING_X = 7;
-    float FISH_TILING_Y = 1;
     float animationTime = 0;
     float animationSpeed = 10;
     int length = 500;
-    float value;
     float RotationNum = 0;
 
     public override void Initialize()
@@ -30,20 +28,20 @@ public class BiggestFish : Fish
             printer.TextureRect = new IntRect(
             0, 0,
             (int)(texture.Size.X / FISH_TILING_X),
-            (int)(texture.Size.Y / FISH_TILING_Y)
+            (int)(texture.Size.Y)
         );
-        textureSize = new Vector2f(printer.Texture.Size.X/FISH_TILING_X, printer.Texture.Size.Y/FISH_TILING_Y);
+        textureSize = new Vector2f(printer.Texture.Size.X/FISH_TILING_X, printer.Texture.Size.Y);
 
         Random random = new Random();
         scale =  random.Next(70, 100)/10;
-        speed = 300/scale;
+        speed = 40;
         printer.Scale *= scale;
 
         Vector2f center = textureSize * 0.5f;
         printer.Origin = center;
 
-        for(int element = length*(int)scale/4; element >= 0; element--){
-            FishItems.Add(new Vector2f (-1000, 0)); 
+        for(int element = length; element >= 0; element--){
+            FishItems.Add(new Vector2f (0, 0));
         }
         CollisionBox = new FloatRect(0, 0, textureSize.X * scale * hitboxscale, textureSize.Y * scale * hitboxscale);
     }
@@ -51,37 +49,26 @@ public class BiggestFish : Fish
     public override void Update(float deltaTime)
     {
         for(int element = FishItems.Count()-1; element > 0; element--){
-            FishItems[element] = FishItems[element - 1]; 
+            int spacebetween = 4;
+            FishItems[element] = FishItems[element - 1] + (FishItems[element] - FishItems[element-1]).Normalize() * spacebetween; 
         }
         FishItems[0] += movevec * deltaTime * speed;
 
+        //Console.WriteLine(FishItems[0]);
+        CollisionBox.Left = FishItems[0].X-textureSize.X*scale * hitboxscale/2;
+        CollisionBox.Top = FishItems[0].Y-textureSize.Y*scale * hitboxscale/2;
         animationTime += deltaTime * animationSpeed;
-            int animationFrame = 4+ (int)animationTime % 3;
-            int spriteOffsetX = animationFrame * printer.TextureRect.Width;
+    }
+    public override void Draw(RenderWindow window)
+    {
+            int animationFrame = 4+(int)animationTime % 3;
+            int spriteOffsetX = animationFrame * printer.TextureRect.Width -1;
             printer.TextureRect = new IntRect(
                 spriteOffsetX,
                 0,
                 printer.TextureRect.Width,
                 printer.TextureRect.Height
         );
-        if(FishItems[0].Y< 300){
-            SetPositon(new Vector2f(FishItems[0].X, 300));
-        }
-
-        CollisionBox.Left = FishItems[0].X-textureSize.X*scale * hitboxscale/2;
-        CollisionBox.Top = FishItems[0].Y-textureSize.X*scale * hitboxscale/2;
-    }
-    public override void Draw(RenderWindow window)
-    {
-        if(printer.TextureRect.Left == 0){
-            printer.TextureRect=
-                new IntRect(
-                    printer.TextureRect.Width * 5,
-                    0,
-                    printer.TextureRect.Width,
-                    printer.TextureRect.Height
-            );
-        }
         for(int element = FishItems.Count()-1; element > 0; element--){
             printer.Position = FishItems[element];
             if(element == FishItems.Count()-1){
@@ -89,7 +76,8 @@ public class BiggestFish : Fish
             }
             printer.Rotation = Utils.Angle(FishItems[element-1]-FishItems[element]) *  360 /2 /(float)Math.PI;
             window.Draw(printer);
-            int spriteOffsetX = (1 + element%3)  * printer.TextureRect.Width;
+
+            spriteOffsetX = (1 + element%3)  * printer.TextureRect.Width;
             printer.TextureRect=
                 new IntRect(
                     spriteOffsetX,
@@ -109,8 +97,8 @@ public class BiggestFish : Fish
         if(RotationNum!= 0){
             printer.Rotation = RotationNum;
         }
-        window.Draw(printer);
         
+        window.Draw(printer);
     }
 
     public override void MoveToGoal(Vector2f player)
@@ -123,10 +111,17 @@ public class BiggestFish : Fish
     }
     public override bool CollisionCheck(FloatRect player)
     {
-        value = 1000000;
         if(CollisionBox.Intersects(player)){
             return true;
         }
         return false;
+    }
+    public new void SetPosition(Vector2f position){
+        FishItems[0] = position;
+        if(FishItems[1] == FishItems[2]){
+            for(int i = 1; i<FishItems.Count; i++){
+                FishItems[i] = FishItems[i-1] + new Vector2f(0, 2);
+            }
+        }
     }
 }

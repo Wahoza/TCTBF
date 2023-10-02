@@ -7,14 +7,12 @@ public abstract class Fish : GameObject{
     public Sprite sprite = new();
     private float value = 0;
     float scale = 1;
-    bool exists = false;
     public abstract bool CollisionCheck(FloatRect player);
     public abstract void MoveToGoal(Vector2f player);
-    public void SetPositon(Vector2f position){
+    public void SetPosition(Vector2f position){
         if(value == 0){
-            value = scale + position.Y/40;
+            value = scale*4 + position.Y/40+5;
         }
-        Console.WriteLine(value);
         sprite.Position = position;
     }
     public Vector2f GetPosition(){
@@ -28,5 +26,11 @@ public abstract class Fish : GameObject{
     }
     public float GetValue(){
         return value / 2;
+    }
+    public void SetValue(int initialValue, float depth){
+        value = scale * 3 + initialValue + depth *3;
+    }
+    public void SetTransparity(byte value){
+        sprite.Color = new Color(sprite.Color.R, sprite.Color.G, sprite.Color.B, value);
     }
 }

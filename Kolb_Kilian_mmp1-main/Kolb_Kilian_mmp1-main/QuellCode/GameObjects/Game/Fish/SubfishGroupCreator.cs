@@ -34,13 +34,13 @@ public class FishGroupCreator
         return false;
     }
 
-    public void SetPositon(Vector2f _position)
+    public void SetPosition(Vector2f _position)
     {
         position = _position + new Vector2f(0, radius);
         foreach(SubFish fish in Group){
             float y = random.Next(0, 2*(int)radius) - radius;
             float x = random.Next(0, 2*(int)radius) - radius;
-            fish.SetPositon(position - new Vector2f(x, y));
+            fish.SetPosition(position - new Vector2f(x, y));
             fish.SetOrigin(position);
         }
     }

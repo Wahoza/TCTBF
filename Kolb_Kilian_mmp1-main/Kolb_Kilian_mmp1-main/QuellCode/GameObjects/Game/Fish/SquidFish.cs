@@ -80,7 +80,7 @@ public class SquidFish : Fish
         CollisionBox.Top = sprite.Position.Y - textureSize.Y * 0.5f * scale * hitboxscale;
 
         if(sprite.Position.Y<  100){
-                SetPositon(new Vector2f(sprite.Position.X, 100));
+                SetPosition(new Vector2f(sprite.Position.X, 100));
         }
     }
 

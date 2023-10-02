@@ -23,10 +23,13 @@ public class ShopHud : GameObject
         TimeUpgrade.Initialize("UpgradeMove", 7, ValueParser.linePositionGame.MoveTime);
         ShopSlots.Add(TimeUpgrade);
 
-        //makes game lag
         ShopItem WeightUpgrade = new ShopItem();
         WeightUpgrade.Initialize("UpgradeWeight", 6, ValueParser.linePositionGame.Weight);
         ShopSlots.Add(WeightUpgrade);
+
+        ShopItem HeartUpgrade = new ShopItem();
+        HeartUpgrade.Initialize("Heart", 20, ValueParser.linePositionGame.Lives);
+        ShopSlots.Add(HeartUpgrade);
 
         moneyHud.Initialize();
 
